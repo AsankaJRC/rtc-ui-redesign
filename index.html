@@ -50,8 +50,22 @@
 </sc-if>
 </div>
 </nav>
-<button style="display:flex;align-items:center;gap:6px;background:#14335C;color:#fff;border:0;border-radius:10px;height:40px;padding:0 16px;font-weight:600;font-size:15px">
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>New</button>
+<div style="position:relative">
+<button type="button" onClick="{{crToggle}}" aria-haspopup="menu" aria-expanded="{{crExp}}" style="display:flex;align-items:center;gap:8px;background:#14335C;color:#fff;border:0;border-radius:10px;height:40px;padding:0 14px 0 16px;font-weight:600;font-size:15px">Create<svg width="12" height="12" viewBox="0 0 24 24" fill="#fff" aria-hidden="true" style="transition:transform .15s;transform:{{crRot}}"><path d="M6 9h12l-6 7z"></path></svg></button>
+<sc-if value="{{crOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{crClose}}" aria-hidden="true" style="position:fixed;inset:0;z-index:50"></div>
+<div role="menu" aria-label="Create" style="position:absolute;top:calc(100% + 6px);right:0;z-index:51;min-width:230px;background:#fff;border:1px solid #E3E8EF;border-radius:10px;box-shadow:0 12px 32px rgba(20,51,92,.18);padding:6px">
+<div class="orgwrap"><a role="menuitem" href="#" aria-haspopup="menu" class="orgitem crit" onClick="{{crNoop}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5A6577" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg><span>New matter</span><svg width="12" height="12" viewBox="0 0 24 24" fill="#3A4657" aria-hidden="true" style="margin-left:auto"><path d="M9 6l7 6-7 6z"></path></svg></a>
+<div class="orgsub" role="menu" style="position:absolute;left:100%;top:-6px;z-index:52;min-width:220px;background:#fff;border:1px solid #E3E8EF;border-radius:10px;box-shadow:0 12px 32px rgba(20,51,92,.18);padding:6px"><div class="orgwrap"><a role="menuitem" href="create-matter.html" class="orgitem">Contract of Sale matter</a></div></div></div>
+<div class="orgwrap"><a role="menuitem" href="#" aria-haspopup="menu" class="orgitem crit" onClick="{{crNoop}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5A6577" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M6 3h8l4 4v14H6zM14 3v4h4M9 12h6M9 16h6"></path></svg><span>New quote</span><svg width="12" height="12" viewBox="0 0 24 24" fill="#3A4657" aria-hidden="true" style="margin-left:auto"><path d="M9 6l7 6-7 6z"></path></svg></a>
+<div class="orgsub" role="menu" style="position:absolute;left:100%;top:-6px;z-index:52;min-width:220px;background:#fff;border:1px solid #E3E8EF;border-radius:10px;box-shadow:0 12px 32px rgba(20,51,92,.18);padding:6px"><div class="orgwrap"><a role="menuitem" href="#" class="orgitem" onClick="{{crClose}}">Contract of Sale quote</a></div></div></div>
+<a role="menuitem" href="#" class="orgitem crit" onClick="{{crClose}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5A6577" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M5 4h14v16H5zM12 11a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 16a4 4 0 018 0"></path></svg><span>New individual</span></a>
+<a role="menuitem" href="#" class="orgitem crit" onClick="{{crClose}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5A6577" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M5 4h14v16H5zM9 8h2M13 8h2M9 12h2M13 12h2M10 20v-4h4v4"></path></svg><span>New organisation</span></a>
+<a role="menuitem" href="#" class="orgitem crit" onClick="{{crClose}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5A6577" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M3 6h18v12H3zM3 10h18M7 15h4"></path></svg><span>New payee</span></a>
+<a role="menuitem" href="#" class="orgitem crit" onClick="{{crClose}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5A6577" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M5 3h14v18H5zM8 7h8M8 11h8M8 15h5"></path></svg><span>New template</span></a>
+</div>
+</sc-if>
+</div>
 <div style="display:flex;align-items:center;gap:4px">
 <button onClick="{{rOpenFn}}" aria-label="Recent matters viewed" title="Recent matters viewed" aria-haspopup="dialog" aria-expanded="{{rExp}}" style="width:40px;height:40px;border:0;background:transparent;border-radius:10px;display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 103-6.7L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l3 2"></path></svg></button>
 <button aria-label="Notifications" style="width:40px;height:40px;border:0;background:transparent;border-radius:10px;display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2" aria-hidden="true"><path d="M6 8a6 6 0 1112 0c0 7 3 8 3 8H3s3-1 3-8"></path><path d="M10 20a2 2 0 004 0"></path></svg></button>
@@ -389,7 +403,7 @@ function rcHeaderVals(c) {
     c._hk = true;
     window.addEventListener('scroll', (e) => { if (e.target && e.target.closest && e.target.closest('[role=listbox]')) return; if (c.state.cuOpen) c.setState({ cuOpen: false }); }, true);
     window.addEventListener('resize', () => { if (c.state.cuOpen) c.setState({ cuOpen: false }); });
-    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && (c.state.aOpen || c.state.rOpen || c.state.oOpen || c.state.cuOpen)) c.setState({ aOpen: false, rOpen: false, oOpen: false, cuOpen: false }); });
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && (c.state.crOpen || c.state.aOpen || c.state.rOpen || c.state.oOpen || c.state.cuOpen)) c.setState({ crOpen: false, aOpen: false, rOpen: false, oOpen: false, cuOpen: false }); });
   }
   const st = c.state || {};
   const apps = [['cal','End date calculator'],['dollar','GST calculator'],['dollarf','Penalty calculator'],['send','Retrieve PEXA invitations'],['search','PEXA subscriber search'],['dollar','Stamp duty calculator']]
@@ -443,6 +457,8 @@ function rcHeaderVals(c) {
     oOpen: !!st.oOpen, oExp: st.oOpen ? 'true' : 'false', oBg: st.oOpen ? '#EEF2F7' : 'transparent',
     oToggle: () => c.setState({ oOpen: !st.oOpen, aOpen: false, rOpen: false }),
     oClose: () => c.setState({ oOpen: false }),
+    crOpen: !!st.crOpen, crExp: st.crOpen ? 'true' : 'false', crRot: st.crOpen ? 'rotate(180deg)' : 'none',
+    crToggle: () => c.setState({ crOpen: !st.crOpen, oOpen: false, aOpen: false }), crClose: () => c.setState({ crOpen: false }), crNoop: (e) => { if (e && e.preventDefault) e.preventDefault(); },
     aOpen: !!st.aOpen, aExp: st.aOpen ? 'true' : 'false', rOpen: !!st.rOpen, rExp: st.rOpen ? 'true' : 'false',
     aToggle: () => c.setState({ aOpen: !st.aOpen, rOpen: false, oOpen: false }),
     aClose: () => c.setState({ aOpen: false }),

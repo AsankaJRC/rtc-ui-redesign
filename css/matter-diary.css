@@ -24,6 +24,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #8DB3
 .cuopt:hover{background:#EEF2F7 !important}
 .stitem+.stitem{border-top:1px solid #E3E8EF;margin-top:4px;padding-top:4px}
 .orgwrap{position:relative}
+.crit{justify-content:flex-start !important;gap:12px !important}
 .orgsub{display:none}
 .orgwrap:hover .orgsub,.orgwrap:focus-within .orgsub{display:block}
 .orgwrap:hover>.orgitem{background:#EEF2F7;color:#14335C}
