@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Matters — Realtime Conveyancer</title>
+<script src="js/matters-source.js"></script>
+<script src="js/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/matters.css">
+</helmet>
+<div style="font-family:'Source Sans 3',ui-sans-serif,system-ui,sans-serif;color:#172234;font-size:15px;line-height:1.45;min-height:100vh;background:#F4F6F9">
+
+<!-- Top bar -->
+<header style="background:#fff;border-bottom:1px solid #E3E8EF">
+<div style="max-width:1360px;margin:0 auto;padding:10px 24px;display:flex;flex-wrap:wrap;align-items:center;gap:16px">
+<a href="#" style="display:flex;align-items:center;text-decoration:none;padding:4px 0">
+<img src="images/realtime-logo.png" alt="Realtime Conveyancer home" style="height:36px;width:auto;display:block">
+</a>
+<nav aria-label="Primary" style="display:flex;flex-wrap:wrap;gap:2px;flex:1 1 auto">
+<a class="navlink" href="index.html">Dashboard</a>
+<a class="navlink" href="#" aria-current="page" style="background:#EEF2F7;color:#14335C;font-weight:600">Matters</a>
+<a class="navlink" href="#">Diary</a>
+<a class="navlink" href="#">Quotes</a>
+<a class="navlink" href="#">Contacts</a>
+<div style="position:relative">
+<button onClick="{{oToggle}}" class="navlink" aria-haspopup="menu" aria-expanded="{{oExp}}" style="border:0;background:{{oBg}};font-size:inherit;display:flex;align-items:center;gap:4px">Organisation<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 9h12l-6 7z"></path></svg></button>
+<sc-if value="{{oOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{oClose}}" aria-hidden="true" style="position:fixed;inset:0;z-index:50"></div>
+<div role="menu" aria-label="Organisation" style="position:absolute;top:calc(100% + 6px);left:0;z-index:51;min-width:220px;background:#fff;border:1px solid #E3E8EF;border-radius:10px;box-shadow:0 12px 32px rgba(20,51,92,.18);padding:6px">
+<sc-for list="{{orgItems}}" as="oi" hint-placeholder-count="10">
+<div class="orgwrap">
+<a role="menuitem" href="#" class="orgitem" aria-haspopup="{{oi.pop}}" onClick="{{oClose}}">{{oi.label}}<sc-if value="{{oi.sub}}" hint-placeholder-val="{{false}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="#3A4657" aria-hidden="true"><path d="M9 6l7 6-7 6z"></path></svg></sc-if></a>
+<sc-if value="{{oi.sub}}" hint-placeholder-val="{{false}}">
+<div aria-label="{{oi.label}}" class="orgsub" role="menu" style="position:absolute;left:100%;top:-6px;z-index:52;min-width:220px;background:#fff;border:1px solid #E3E8EF;border-radius:10px;box-shadow:0 12px 32px rgba(20,51,92,.18);padding:6px">
+<sc-for list="{{oi.subs}}" as="s" hint-placeholder-count="3">
+<div class="orgwrap">
+<a role="menuitem" href="#" class="orgitem" onClick="{{oClose}}">{{s.label}}<sc-if value="{{s.sub}}" hint-placeholder-val="{{false}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="#3A4657" aria-hidden="true"><path d="M9 6l7 6-7 6z"></path></svg></sc-if></a>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</nav>
+<button style="display:flex;align-items:center;gap:6px;background:#14335C;color:#fff;border:0;border-radius:10px;height:40px;padding:0 16px;font-weight:600;font-size:15px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>New</button>
+<div style="display:flex;align-items:center;gap:4px">
+<button onClick="{{rOpenFn}}" aria-label="Recent matters viewed" title="Recent matters viewed" aria-haspopup="dialog" aria-expanded="{{rExp}}" style="width:40px;height:40px;border:0;background:transparent;border-radius:10px;display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 103-6.7L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l3 2"></path></svg></button>
+<button aria-label="Notifications" style="width:40px;height:40px;border:0;background:transparent;border-radius:10px;display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2" aria-hidden="true"><path d="M6 8a6 6 0 1112 0c0 7 3 8 3 8H3s3-1 3-8"></path><path d="M10 20a2 2 0 004 0"></path></svg></button>
+<div style="position:relative">
+<button onClick="{{aToggle}}" aria-label="Apps" aria-haspopup="menu" aria-expanded="{{aExp}}" style="width:40px;height:40px;border:0;background:transparent;border-radius:10px;display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"></rect><rect x="14" y="4" width="6" height="6" rx="1"></rect><rect x="4" y="14" width="6" height="6" rx="1"></rect><rect x="14" y="14" width="6" height="6" rx="1"></rect></svg></button>
+<sc-if value="{{aOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{aClose}}" aria-hidden="true" style="position:fixed;inset:0;z-index:50"></div>
+<div role="menu" aria-label="Apps" style="position:absolute;top:calc(100% + 6px);right:0;z-index:51;min-width:260px;background:#fff;border:1px solid #E3E8EF;border-radius:10px;box-shadow:0 12px 32px rgba(20,51,92,.18);padding:6px">
+<sc-for list="{{apps}}" as="ap" hint-placeholder-count="6">
+<a role="menuitem" href="#" class="appitem" onClick="{{aClose}}"><span aria-hidden="true" style="width:22px;display:grid;place-items:center;flex:none"><sc-if value="{{ap.cal}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="#14335C"><path d="M7 2h2v2h6V2h2v2h2a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2h2V2zm12 8H5v10h14V10zM7 12h4v4H7v-4z"></path></svg></sc-if><sc-if value="{{ap.dollar}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14335C" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M15 9.2c-.5-1-1.6-1.6-3-1.6-1.7 0-3 .9-3 2.2 0 3 6 1.6 6 4.5 0 1.3-1.3 2.2-3 2.2-1.4 0-2.6-.6-3.1-1.7M12 6v1.6M12 16.5V18"></path></svg></sc-if><sc-if value="{{ap.dollarf}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#14335C"></circle><path d="M15 9.2c-.5-1-1.6-1.6-3-1.6-1.7 0-3 .9-3 2.2 0 3 6 1.6 6 4.5 0 1.3-1.3 2.2-3 2.2-1.4 0-2.6-.6-3.1-1.7M12 6v1.6M12 16.5V18" fill="none" stroke="#fff" stroke-width="2"></path></svg></sc-if><sc-if value="{{ap.send}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="#14335C"><path d="M3 20l18-8L3 4v6l12 2-12 2z"></path></svg></sc-if><sc-if value="{{ap.search}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14335C" stroke-width="2.4" stroke-linecap="round"><circle cx="10" cy="10" r="6"></circle><path d="M20 20l-5.5-5.5"></path></svg></sc-if></span>{{ap.label}}</a>
+</sc-for>
+</div>
+</sc-if>
+</div>
+<button aria-label="Account: Asanka" style="display:flex;align-items:center;gap:8px;border:0;background:transparent;padding:4px 8px 4px 4px;border-radius:999px;font-size:14px;color:#172234">
+<span style="width:32px;height:32px;border-radius:50%;background:#14335C;color:#fff;display:grid;place-items:center;font-weight:600;font-size:13px">AP</span>Asanka</button>
+</div>
+</div>
+</header>
+
+<main style="max-width:1360px;margin:0 auto;padding:28px 24px 48px;display:flex;flex-direction:column;gap:20px">
+
+<!-- Page header -->
+<div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
+<div>
+<h1 style="margin:0;font-size:30px;line-height:1.15;font-weight:700;color:#14335C">Matters</h1>
+<p style="margin:4px 0 0;color:#5A6577">{{mSummary}}</p>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:10px">
+<button style="display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border:1px solid #D5DCE6;background:#fff;border-radius:10px;font-size:14px;font-weight:600;color:#14335C"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg>Export<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 9h12l-6 7z"></path></svg></button>
+<a href="#" style="display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;background:#14335C;border-radius:10px;font-size:14px;font-weight:600;color:#fff;text-decoration:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Create new matter</a>
+</div>
+</div>
+
+<!-- Toolbar -->
+<section aria-label="Find matters" style="background:#fff;border:1px solid #E3E8EF;border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+<label for="mq" style="position:relative;flex:1 1 320px;max-width:460px;display:block">
+<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Search matters</span>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5A6577" stroke-width="2" aria-hidden="true" style="position:absolute;left:12px;top:50%;transform:translateY(-50%)"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+<input id="mq" type="search" value="{{mq}}" onInput="{{mqInput}}" placeholder="Search by reference, address or client" style="width:100%;box-sizing:border-box;height:40px;padding:0 12px 0 38px;border:1px solid #D5DCE6;border-radius:10px;font:inherit;font-size:14px;color:#172234;background:#fff">
+</label>
+<button onClick="{{fToggle}}" aria-expanded="{{fExp}}" aria-controls="mfilters" style="display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border:1px solid {{fBorder}};background:{{fBg}};border-radius:10px;font-size:14px;font-weight:600;color:#14335C"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"></path></svg>Filters<sc-if value="{{mHasChips}}" hint-placeholder-val="{{true}}"><span style="font-size:12px;font-weight:700;background:#14335C;color:#fff;border-radius:999px;padding:0 7px">{{mChipCount}}</span></sc-if></button>
+</div>
+<sc-if value="{{fOpen}}" hint-placeholder-val="{{false}}">
+<div id="mfilters" role="region" aria-label="Filters" style="border-top:1px solid #E3E8EF;padding-top:14px">
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px 20px">
+<sc-for list="{{fFields}}" as="ff" hint-placeholder-count="8">
+<div>
+<label for="{{ff.id}}" style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#3A4657;margin-bottom:6px">{{ff.label}}<sc-if value="{{ff.info}}" hint-placeholder-val="{{false}}"><span title="{{ff.info}}" aria-label="{{ff.info}}" role="img" style="display:inline-grid;place-items:center;color:#5A6577"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6M12 7.5v.5"></path></svg></span></sc-if></label>
+<sc-if value="{{ff.isDate}}" hint-placeholder-val="{{false}}">
+<button id="{{ff.id}}" onClick="{{ff.open}}" aria-haspopup="dialog" class="fsel fdate" style="color:{{ff.color}};border-color:{{ff.border}}"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ff.display}}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5A6577" stroke-width="2" aria-hidden="true" style="flex:none"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg></button>
+</sc-if>
+<sc-if value="{{ff.isMulti}}" hint-placeholder-val="{{false}}">
+<div style="position:relative">
+<button id="{{ff.id}}" onClick="{{ff.msToggle}}" aria-haspopup="listbox" aria-expanded="{{ff.msExp}}" class="fsel fdate" style="color:{{ff.color}};border-color:{{ff.border}}"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ff.msText}}</span><svg width="12" height="12" viewBox="0 0 24 24" fill="#3A4657" aria-hidden="true" style="flex:none;transform:{{ff.msRot}}"><path d="M6 9h12l-6 7z"></path></svg></button>
+<sc-if value="{{ff.msOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{ff.msClose}}" aria-hidden="true" style="position:fixed;inset:0;z-index:55"></div>
+<div role="group" aria-label="{{ff.label}}" style="position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:56;background:#fff;border:1px solid #E3E8EF;border-radius:10px;box-shadow:0 12px 32px rgba(20,51,92,.18);padding:6px;max-height:300px;overflow-y:auto;overscroll-behavior:contain">
+<sc-for list="{{ff.msOpts}}" as="mo" hint-placeholder-count="4">
+<label for="{{mo.id}}" class="msopt"><input id="{{mo.id}}" type="checkbox" checked="{{mo.on}}" onChange="{{mo.toggle}}">{{mo.label}}</label>
+<sc-if value="{{mo.div}}" hint-placeholder-val="{{false}}"><hr aria-hidden="true" style="border:0;border-top:1px solid #E3E8EF;margin:4px 6px"></sc-if>
+</sc-for>
+<div style="border-top:1px solid #EEF1F5;margin-top:4px;padding-top:4px"><button onClick="{{ff.msAllClear}}" style="border:0;background:transparent;height:32px;padding:0 10px;border-radius:8px;font-size:13px;font-weight:600;color:#1F4B85">Clear selection</button></div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+<sc-if value="{{ff.isSel}}" hint-placeholder-val="{{true}}">
+<span class="thdd" onKeyDown="{{ff.dd.key}}" style="position:relative;display:block"><button type="button" id="{{ff.id}}" onClick="{{ff.dd.toggle}}" aria-haspopup="listbox" aria-expanded="{{ff.dd.exp}}" class="thsel" style="width:100%;height:40px;border-color:{{ff.dd.bd}};font-weight:500"><span class="thsel-l" style="color:{{ff.dd.lc}}">{{ff.dd.label}}</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;transition:transform .15s;transform:{{ff.dd.rot}}"><path d="M6 9l6 6 6-6"></path></svg></button><sc-if value="{{ff.dd.open}}" hint-placeholder-val="{{false}}"><span onClick="{{ff.dd.close}}" aria-hidden="true" style="position:fixed;inset:0;z-index:199"></span><ul role="listbox" class="thlist2" style="top:{{ff.dd.lt}};bottom:{{ff.dd.lb}};left:{{ff.dd.ll}};width:{{ff.dd.lw}};max-height:{{ff.dd.lmh}}"><sc-for list="{{ff.dd.opts}}" as="ddo" hint-placeholder-count="3"><li role="option" aria-selected="{{ddo.sel}}"><button type="button" onClick="{{ddo.pick}}" class="thopt" style="background:{{ddo.bg}};font-weight:{{ddo.fw}};color:{{ddo.fg}}"><span style="flex:1">{{ddo.label}}</span><sc-if value="{{ddo.on}}" hint-placeholder-val="{{false}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#14335C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></button></li></sc-for></ul></sc-if></span>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+<button onClick="{{fReset}}" style="height:38px;padding:0 16px;border:1px solid #D5DCE6;background:#fff;border-radius:10px;font-size:14px;font-weight:600;color:#14335C">Reset</button>
+<button onClick="{{fApply}}" style="height:38px;padding:0 18px;border:0;background:#14335C;border-radius:10px;font-size:14px;font-weight:600;color:#fff">Apply filters</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{mHasApplied}}" hint-placeholder-val="{{true}}">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:#5A6577">
+<span>Applied filters:</span>
+<sc-for list="{{mChips}}" as="ch" hint-placeholder-count="1">
+<span style="display:inline-flex;align-items:center;gap:4px;background:#E6EEF8;color:#14335C;border-radius:999px;padding:2px 4px 2px 12px;font-weight:600">{{ch.label}}<button onClick="{{ch.remove}}" aria-label="Remove filter {{ch.label}}" style="width:24px;height:24px;border:0;background:transparent;border-radius:999px;display:grid;place-items:center;color:#14335C"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></span>
+</sc-for>
+<button onClick="{{mClearAll}}" style="border:0;background:transparent;height:30px;padding:0 8px;border-radius:8px;font-size:14px;font-weight:600;color:#1F4B85">Clear all</button>
+</div>
+</sc-if>
+</section>
+
+<!-- Table -->
+<section aria-labelledby="mt-cap" style="background:#fff;border:1px solid #E3E8EF;border-radius:14px;overflow:hidden">
+<div style="overflow-x:auto">
+<table style="width:100%;min-width:1080px;border-collapse:collapse;font-size:14px">
+<caption id="mt-cap" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Matters</caption>
+<thead>
+<tr class="mthead">
+<sc-for list="{{mCols}}" as="col" hint-placeholder-count="7">
+<th scope="col" aria-sort="{{col.ariaSort}}" style="text-align:left;padding:0;width:{{col.w}}">
+<sc-if value="{{col.sortable}}" hint-placeholder-val="{{true}}"><button onClick="{{col.sort}}" class="mtsort" style="color:{{col.color}}">{{col.label}}<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l5 6H7z" fill="{{col.upFill}}"></path><path d="M12 20l-5-6h10z" fill="{{col.downFill}}"></path></svg></button></sc-if>
+<sc-if value="{{col.plain}}" hint-placeholder-val="{{false}}"><span class="mtplain">{{col.label}}</span></sc-if>
+</th>
+</sc-for>
+<th scope="col" style="width:44px"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Open</span></th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{mRows}}" as="r" hint-placeholder-count="10">
+<tr class="mtrow">
+<td style="padding:12px 16px"><a href="{{r.href}}" style="font-weight:700;color:#14335C;font-variant-numeric:tabular-nums">{{r.ref}}</a><span style="display:block;font-size:13px;color:#5A6577">{{r.typeLine}}</span></td>
+<td style="padding:12px"><sc-if value="{{r.hasDate}}" hint-placeholder-val="{{true}}"><span style="font-variant-numeric:tabular-nums;font-weight:600">{{r.date}}</span><span style="display:block;font-size:13px;color:{{r.dateNoteColor}}">{{r.dateNote}}</span></sc-if><sc-if value="{{r.noDate}}" hint-placeholder-val="{{false}}"><span style="color:#5A6577">Not booked</span></sc-if></td>
+<td style="padding:12px;max-width:260px">{{r.street}}<span style="display:block;font-size:13px;color:#5A6577">{{r.suburb}}</span></td>
+<td style="padding:12px">{{r.rep}}</td>
+<td style="padding:12px"><span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span aria-hidden="true" style="width:8px;height:8px;border-radius:999px;background:{{r.actDot}}"></span>{{r.acting}}</span></td>
+<td style="padding:12px"><span style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap"><span aria-hidden="true" style="width:28px;height:28px;border-radius:999px;background:#E6EEF8;color:#14335C;font-size:12px;font-weight:700;display:grid;place-items:center">{{r.initials}}</span>{{r.assignee}}</span></td>
+<td style="padding:12px"><span style="display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;white-space:nowrap;background:{{r.stBg}};color:{{r.stFg}}">{{r.status}}</span><sc-if value="{{r.stWhen}}" hint-placeholder-val="{{false}}"><span style="display:block;font-size:12px;color:#5A6577;margin-top:3px;white-space:nowrap">{{r.stWhen}}</span></sc-if></td>
+<td style="padding:12px 12px 12px 0;text-align:right"><a href="{{r.href}}" aria-label="Open matter {{r.ref}}" class="mtopen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></a></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+<sc-if value="{{mEmpty}}" hint-placeholder-val="{{false}}">
+<div style="padding:40px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px">
+<p style="margin:0;font-weight:600">No matters match your search</p>
+<p style="margin:0;font-size:14px;color:#5A6577">Try a different reference, address or client, or clear the filters.</p>
+<button onClick="{{mClearAll}}" style="margin-top:6px;border:1px solid #D5DCE6;background:#fff;border-radius:10px;height:38px;padding:0 14px;font-size:14px;font-weight:600;color:#14335C">Clear filters</button>
+</div>
+</sc-if>
+</div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:20px;padding:10px 16px;border-top:1px solid #E3E8EF;background:#F9FAFC;font-size:14px;color:#3A4657">
+<label style="display:flex;align-items:center;gap:8px">Rows per page<span class="thdd" onKeyDown="{{dd_rpp.key}}" style="position:relative;display:inline-block"><button type="button" onClick="{{dd_rpp.toggle}}" aria-haspopup="listbox" aria-expanded="{{dd_rpp.exp}}" class="thsel" style="width:auto;height:32px;border-color:{{dd_rpp.bd}};min-width:72px;border-radius:8px"><span class="thsel-l" style="color:{{dd_rpp.lc}}">{{dd_rpp.label}}</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;transition:transform .15s;transform:{{dd_rpp.rot}}"><path d="M6 9l6 6 6-6"></path></svg></button><sc-if value="{{dd_rpp.open}}" hint-placeholder-val="{{false}}"><span onClick="{{dd_rpp.close}}" aria-hidden="true" style="position:fixed;inset:0;z-index:199"></span><ul role="listbox" class="thlist2" style="top:{{dd_rpp.lt}};bottom:{{dd_rpp.lb}};left:{{dd_rpp.ll}};width:{{dd_rpp.lw}};max-height:{{dd_rpp.lmh}}"><sc-for list="{{dd_rpp.opts}}" as="ddo" hint-placeholder-count="3"><li role="option" aria-selected="{{ddo.sel}}"><button type="button" onClick="{{ddo.pick}}" class="thopt" style="background:{{ddo.bg}};font-weight:{{ddo.fw}};color:{{ddo.fg}}"><span style="flex:1">{{ddo.label}}</span><sc-if value="{{ddo.on}}" hint-placeholder-val="{{false}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#14335C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></button></li></sc-for></ul></sc-if></span></label>
+<span style="font-variant-numeric:tabular-nums">{{mRange}}</span>
+<div style="display:flex;gap:4px">
+<button disabled="disabled" aria-label="Previous page" style="width:32px;height:32px;border:1px solid #D5DCE6;background:#fff;border-radius:8px;display:grid;place-items:center;color:#9AA7B8;cursor:default"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+<button disabled="disabled" aria-label="Next page" style="width:32px;height:32px;border:1px solid #D5DCE6;background:#fff;border-radius:8px;display:grid;place-items:center;color:#9AA7B8;cursor:default"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button>
+</div>
+</div>
+</section>
+</main>
+
+<!-- Date range picker -->
+<sc-if value="{{dpOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{dpClose}}" style="position:fixed;inset:0;z-index:70;background:rgba(23,34,52,.35);display:flex;justify-content:center;align-items:flex-start;padding:6vh 16px 16px;overflow-y:auto">
+<div role="dialog" aria-modal="true" aria-labelledby="dp-h" onClick="{{dpStop}}" onKeyDown="{{dpKey}}" style="width:100%;max-width:920px;background:#fff;border:1px solid #E3E8EF;border-radius:14px;box-shadow:0 24px 60px rgba(20,51,92,.22);overflow:hidden">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 14px 14px 20px;border-bottom:1px solid #E3E8EF">
+<h2 id="dp-h" style="margin:0;font-size:17px;font-weight:700">{{dpTitle}}</h2>
+<button autofocus="autofocus" onClick="{{dpClose}}" aria-label="Close" style="width:34px;height:34px;border:0;background:transparent;border-radius:8px;display:grid;place-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div style="display:flex;flex-wrap:wrap">
+<div style="flex:1 1 200px;max-width:100%;border-right:1px solid #E3E8EF;padding:10px;display:flex;flex-direction:column;gap:2px;max-height:470px;overflow-y:auto;box-sizing:border-box">
+<sc-for list="{{dpPresets}}" as="p" hint-placeholder-count="13">
+<button onClick="{{p.pick}}" aria-pressed="{{p.on}}" class="dppreset" style="background:{{p.bg}};color:{{p.fg}};font-weight:{{p.fw}}">{{p.label}}</button>
+</sc-for>
+<div style="border-top:1px solid #EEF1F5;margin-top:6px;padding-top:8px;display:flex;flex-direction:column;gap:8px">
+<label class="dpn"><input type="number" min="1" max="999" value="{{dpNUp}}" onChange="{{dpNUpChange}}" aria-label="Number of days up to today">days up to today</label>
+<label class="dpn"><input type="number" min="1" max="999" value="{{dpNStart}}" onChange="{{dpNStartChange}}" aria-label="Number of days starting today">days starting today</label>
+</div>
+</div>
+<div style="flex:999 1 520px;min-width:0;padding:16px 20px 18px;display:flex;flex-direction:column;gap:14px">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
+<button onClick="{{dpEditFrom}}" aria-pressed="{{dpFromOn}}" class="dpend" style="border-color:{{dpFromBorder}};background:{{dpFromBg}}"><span style="display:block;font-size:12px;font-weight:600;color:#5A6577">From</span><span style="font-variant-numeric:tabular-nums;color:{{dpFromColor}}">{{dpFromText}}</span></button>
+<button onClick="{{dpEditTo}}" aria-pressed="{{dpToOn}}" class="dpend" style="border-color:{{dpToBorder}};background:{{dpToBg}}"><span style="display:block;font-size:12px;font-weight:600;color:#5A6577">To</span><span style="font-variant-numeric:tabular-nums;color:{{dpToColor}}">{{dpToText}}</span></button>
+</div>
+<div style="display:flex;align-items:center;gap:8px">
+<button onClick="{{dpPrev}}" aria-label="Previous month" class="dpnav"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+<div style="flex:1;display:flex;justify-content:center;gap:8px">
+<span class="thdd" onKeyDown="{{ddMonth.key}}" style="position:relative;display:inline-block"><button type="button" aria-label="Month" onClick="{{ddMonth.toggle}}" aria-haspopup="listbox" aria-expanded="{{ddMonth.exp}}" class="thsel" style="width:auto;height:32px;border-color:{{ddMonth.bd}};min-width:130px;border-radius:8px"><span class="thsel-l" style="color:{{ddMonth.lc}}">{{ddMonth.label}}</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;transition:transform .15s;transform:{{ddMonth.rot}}"><path d="M6 9l6 6 6-6"></path></svg></button><sc-if value="{{ddMonth.open}}" hint-placeholder-val="{{false}}"><span onClick="{{ddMonth.close}}" aria-hidden="true" style="position:fixed;inset:0;z-index:199"></span><ul role="listbox" class="thlist2" style="top:{{ddMonth.lt}};bottom:{{ddMonth.lb}};left:{{ddMonth.ll}};width:{{ddMonth.lw}};max-height:{{ddMonth.lmh}}"><sc-for list="{{ddMonth.opts}}" as="ddo" hint-placeholder-count="3"><li role="option" aria-selected="{{ddo.sel}}"><button type="button" onClick="{{ddo.pick}}" class="thopt" style="background:{{ddo.bg}};font-weight:{{ddo.fw}};color:{{ddo.fg}}"><span style="flex:1">{{ddo.label}}</span><sc-if value="{{ddo.on}}" hint-placeholder-val="{{false}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#14335C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></button></li></sc-for></ul></sc-if></span>
+<span class="thdd" onKeyDown="{{ddYear.key}}" style="position:relative;display:inline-block"><button type="button" aria-label="Year" onClick="{{ddYear.toggle}}" aria-haspopup="listbox" aria-expanded="{{ddYear.exp}}" class="thsel" style="width:auto;height:32px;border-color:{{ddYear.bd}};min-width:90px;border-radius:8px"><span class="thsel-l" style="color:{{ddYear.lc}}">{{ddYear.label}}</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;transition:transform .15s;transform:{{ddYear.rot}}"><path d="M6 9l6 6 6-6"></path></svg></button><sc-if value="{{ddYear.open}}" hint-placeholder-val="{{false}}"><span onClick="{{ddYear.close}}" aria-hidden="true" style="position:fixed;inset:0;z-index:199"></span><ul role="listbox" class="thlist2" style="top:{{ddYear.lt}};bottom:{{ddYear.lb}};left:{{ddYear.ll}};width:{{ddYear.lw}};max-height:{{ddYear.lmh}}"><sc-for list="{{ddYear.opts}}" as="ddo" hint-placeholder-count="3"><li role="option" aria-selected="{{ddo.sel}}"><button type="button" onClick="{{ddo.pick}}" class="thopt" style="background:{{ddo.bg}};font-weight:{{ddo.fw}};color:{{ddo.fg}}"><span style="flex:1">{{ddo.label}}</span><sc-if value="{{ddo.on}}" hint-placeholder-val="{{false}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#14335C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></button></li></sc-for></ul></sc-if></span>
+</div>
+<button onClick="{{dpToday}}" class="dpnav" style="width:auto;padding:0 10px;font-size:13px;font-weight:600;color:#14335C">Today</button>
+<button onClick="{{dpNext}}" aria-label="Next month" class="dpnav"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px">
+<sc-for list="{{dpCals}}" as="cal" hint-placeholder-count="2">
+<div>
+<h3 style="margin:0 0 6px;font-size:15px;font-weight:700;color:#172234">{{cal.title}}</h3>
+<div role="grid" aria-label="{{cal.title}}" style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));row-gap:2px;text-align:center">
+<sc-for list="{{dpDow}}" as="dw" hint-placeholder-count="7"><span style="font-size:12px;font-weight:600;color:#5A6577;padding:4px 0">{{dw}}</span></sc-for>
+<sc-for list="{{cal.days}}" as="dd" hint-placeholder-count="35">
+<span style="height:38px;display:grid;place-items:center;background:{{dd.band}};border-radius:{{dd.bandR}}">
+<sc-if value="{{dd.real}}" hint-placeholder-val="{{true}}"><button onClick="{{dd.pick}}" aria-label="{{dd.aria}}" aria-pressed="{{dd.sel}}" class="dpday" style="background:{{dd.bg}};color:{{dd.fg}};font-weight:{{dd.fw}};box-shadow:{{dd.ring}}">{{dd.n}}</button></sc-if>
+</span>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;border-top:1px solid #E3E8EF;background:#F9FAFC">
+<span style="font-size:14px;color:#3A4657">{{dpSummary}}</span>
+<div style="display:flex;gap:10px">
+<button onClick="{{dpClear}}" style="height:38px;padding:0 16px;border:1px solid #D5DCE6;background:#fff;border-radius:10px;font-size:14px;font-weight:600;color:#14335C">Clear</button>
+<button onClick="{{dpApply}}" disabled="{{dpCantApply}}" style="height:38px;padding:0 18px;border:0;background:#14335C;border-radius:10px;font-size:14px;font-weight:600;color:#fff;opacity:{{dpApplyOp}}">Apply</button>
+</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<!-- Recent matters viewed -->
+<sc-if value="{{rOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{rClose}}" style="position:fixed;inset:0;z-index:60;background:rgba(23,34,52,.35);display:flex;justify-content:center;align-items:flex-start;padding:10vh 16px 16px">
+<div role="dialog" aria-modal="true" aria-labelledby="rmv-h" onClick="{{sStop}}" style="width:100%;max-width:1160px;background:#fff;border:1px solid #E3E8EF;border-radius:14px;box-shadow:0 24px 60px rgba(20,51,92,.22);overflow:hidden">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;padding:14px 14px 14px 20px;border-bottom:1px solid #E3E8EF">
+<h2 id="rmv-h" style="margin:0;display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;color:#172234"><span aria-hidden="true" style="width:32px;height:32px;border-radius:8px;background:#EEF2F7;display:grid;place-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#14335C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 103-6.7L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l3 2"></path></svg></span>Recent matters viewed</h2>
+<button autofocus="autofocus" onClick="{{rClose}}" aria-label="Close" style="width:34px;height:34px;border:0;background:transparent;border-radius:8px;display:grid;place-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div style="overflow-x:auto;max-height:70vh">
+<table style="width:100%;border-collapse:collapse;font-size:14px;color:#172234;min-width:900px">
+<thead><tr class="rmvhead" style="background:#F7F9FC;text-align:left">
+<th style="padding:10px 16px;font-weight:600">Reference</th><th style="padding:10px 12px;font-weight:600">Status</th><th style="padding:10px 12px;font-weight:600">Property address</th><th style="padding:10px 12px;font-weight:600">Representing</th><th style="padding:10px 12px;font-weight:600">Matter type</th><th style="padding:10px 16px 10px 12px;font-weight:600">Acting for</th>
+</tr></thead>
+<tbody>
+<sc-for list="{{recent}}" as="r" hint-placeholder-count="7">
+<tr class="rmvrow" style="border-top:1px solid #EEF1F5">
+<td style="padding:12px 16px"><a href="{{r.href}}" style="font-weight:600">{{r.ref}}</a></td>
+<td style="padding:12px"><span style="display:flex;align-items:center;gap:8px"><span style="background:{{r.bg}};color:{{r.fg}};font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap">{{r.status}}</span><sc-if value="{{r.when}}" hint-placeholder-val="{{false}}"><span style="font-size:12px;color:#5A6577;line-height:1.3">{{r.date}}<br>{{r.time}}</span></sc-if></span></td>
+<td style="padding:12px">{{r.addr}}</td>
+<td style="padding:12px">{{r.rep}}</td>
+<td style="padding:12px">{{r.type}}</td>
+<td style="padding:12px 16px 12px 12px">{{r.acting}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</sc-if>
+
+<!-- Global search -->
+<sc-if value="{{sOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{sClose}}" style="position:fixed;inset:0;z-index:60;background:rgba(23,34,52,.35);display:flex;justify-content:center;align-items:flex-start;padding:12vh 16px 16px">
+<div role="dialog" aria-modal="true" aria-label="Search" onClick="{{sStop}}" style="width:100%;max-width:600px;background:#fff;border-radius:14px;box-shadow:0 24px 60px rgba(20,51,92,.28);overflow:hidden;font-family:'Source Sans 3',ui-sans-serif,system-ui,sans-serif">
+<div style="display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid #E3E8EF">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5A6577" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+<input id="gsearch-input" autofocus="autofocus" type="text" value="{{sq}}" onInput="{{sInput}}" onKeyDown="{{sKey}}" placeholder="Search matters, addresses, contacts" role="combobox" aria-expanded="true" aria-controls="gsearch-list" aria-activedescendant="{{sActiveId}}" aria-label="Search" style="flex:1;min-width:0;border:0;outline:none;height:56px;font:inherit;font-size:17px;color:#172234;background:transparent">
+<kbd style="font-family:inherit;font-size:12px;color:#5A6577;border:1px solid #D5DCE6;border-radius:5px;padding:1px 6px">Esc</kbd>
+</div>
+<div id="gsearch-list" role="listbox" style="max-height:380px;overflow:auto;padding:6px 6px 8px">
+<sc-for list="{{sGroups}}" as="g" hint-placeholder-count="2">
+<p style="margin:8px 10px 4px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#5A6577">{{g.label}}</p>
+<sc-for list="{{g.items}}" as="it" hint-placeholder-count="3">
+<a id="{{it.id}}" role="option" aria-selected="{{it.sel}}" href="{{it.href}}" onMouseEnter="{{it.hover}}" style="display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:9px;background:{{it.bg}};color:#172234;text-decoration:none">
+<span aria-hidden="true" style="width:32px;height:32px;border-radius:8px;background:{{it.iconBg}};display:grid;place-items:center;flex:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{it.iconFg}}" stroke-width="2.2"><path d="{{it.icon}}"></path></svg></span>
+<span style="flex:1;min-width:0"><span style="display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{it.title}}</span><span style="display:block;font-size:13px;color:#5A6577;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{it.sub}}</span></span>
+<sc-if value="{{it.sel}}" hint-placeholder-val="{{false}}"><kbd style="font-family:inherit;font-size:12px;color:#14335C;border:1px solid #C9D4E3;border-radius:5px;padding:1px 6px;background:#fff">↵</kbd></sc-if>
+</a>
+</sc-for>
+</sc-for>
+<sc-if value="{{sNone}}" hint-placeholder-val="{{false}}"><p style="margin:0;padding:28px 12px;text-align:center;color:#5A6577">No matters or contacts match “{{sq}}”.</p></sc-if>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:6px 16px;padding:10px 16px;border-top:1px solid #E3E8EF;background:#F7F9FC;font-size:12px;color:#5A6577">
+<span>↑ ↓ to move</span><span>↵ to open</span><span>Esc to close</span><span style="margin-left:auto">Open anytime with Ctrl K or /</span>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1160}}'>
+
+function rcSearchVals(c) {
+  if (!c._sk) {
+    c._sk = true;
+    window.addEventListener('keydown', (e) => {
+      const t = e.target, typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable);
+      if ((e.key === 'k' || e.key === 'K') && (e.ctrlKey || e.metaKey)) { e.preventDefault(); c._sOpen(); }
+      else if (e.key === '/' && !typing) { e.preventDefault(); c._sOpen(); }
+    });
+    c._sOpen = () => { c.setState({ sOpen: true, sq: '', sIdx: 0 }); setTimeout(() => { const el = document.getElementById('gsearch-input'); if (el) el.focus(); }, 30); };
+  }
+  const st = c.state || {};
+  const q = (st.sq || '').trim().toLowerCase();
+  const M = 'M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z';
+  const P = 'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-4 4-6 8-6s8 2 8 6';
+  const matters = [
+    ['00003', '3 Overland Road, Croydon Park SA 5008', 'Lenkov → Kellog · Overdue', 'matter-overview.html'],
+    ['00008', '21 Rundle Street, Kent Town SA 5067', 'Proprietor on title · Overdue', '#'],
+    ['00010', '6 Beach Road, Christies Beach SA 5165', 'Both parties · Overdue', '#'],
+    ['00012', '14 Prospect Road, Prospect SA 5082', 'Both parties · Settles 23 Oct 2026', 'matter-overview.html'],
+    ['00015', '7 Hill Street, Glenelg SA 5045', 'Proprietor on title · Settles 28 Oct 2026', 'matter-overview.html'],
+    ['00026', '9 Unley Road, Unley SA 5061', 'Both parties · Settles 8 Jan 2027', 'matter-overview.html']
+  ];
+  const people = [
+    ['Juin Ivan Lenkov “John”', 'Vendor · 00003 Croydon Park'],
+    ['Michael Kellog “Mick”', 'Purchaser · 00003 Croydon Park'],
+    ['Juin agent Testing', 'Vendor’s agent · Juin Real Estate · 00003'],
+    ['Anna · Fayesbook', 'Purchaser’s agent · 00003'],
+    ['Juin Broker Inc', 'Broker · 00003']
+  ];
+  let groups;
+  if (!q) {
+    groups = [{ label: 'Recently opened', items: matters.slice(0, 3).map(m => ({ title: m[0] + ' · ' + m[1], sub: m[2], href: m[3], icon: M, iconBg: '#E6EEF8', iconFg: '#14335C' })) }];
+  } else {
+    const mm = matters.filter(m => (m[0] + ' ' + m[1] + ' ' + m[2]).toLowerCase().includes(q)).map(m => ({ title: m[0] + ' · ' + m[1], sub: m[2], href: m[3], icon: M, iconBg: '#E6EEF8', iconFg: '#14335C' }));
+    const pp = people.filter(p => (p[0] + ' ' + p[1]).toLowerCase().includes(q)).map(p => ({ title: p[0], sub: p[1], href: 'matter-overview.html', icon: P, iconBg: '#F1F4F8', iconFg: '#3A4657' }));
+    groups = [];
+    if (mm.length) groups.push({ label: 'Matters & addresses', items: mm });
+    if (pp.length) groups.push({ label: 'Contacts', items: pp });
+  }
+  const flat = [];
+  groups.forEach(g => g.items.forEach(it => flat.push(it)));
+  const n = flat.length;
+  const idx = n ? Math.min(st.sIdx || 0, n - 1) : -1;
+  flat.forEach((it, i) => {
+    it.id = 'gs-opt-' + i; it.sel = i === idx ? 'true' : false; it.bg = i === idx ? '#EEF2F7' : 'transparent';
+    it.hover = () => { if ((c.state.sIdx || 0) !== i) c.setState({ sIdx: i }); };
+  });
+  return {
+    sOpen: !!st.sOpen, sq: st.sq || '', sGroups: groups, sNone: !!q && n === 0, sActiveId: idx >= 0 ? 'gs-opt-' + idx : '',
+    sOpenFn: () => c._sOpen(),
+    sClose: () => c.setState({ sOpen: false }),
+    sStop: (e) => e.stopPropagation(),
+    sInput: (e) => c.setState({ sq: e.target.value, sIdx: 0 }),
+    sKey: (e) => {
+      if (e.key === 'ArrowDown') { e.preventDefault(); if (n) c.setState({ sIdx: (idx + 1) % n }); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); if (n) c.setState({ sIdx: (idx - 1 + n) % n }); }
+      else if (e.key === 'Enter') { e.preventDefault(); const el = document.getElementById('gs-opt-' + idx); if (el) el.click(); }
+      else if (e.key === 'Escape') { e.preventDefault(); c.setState({ sOpen: false }); }
+    }
+  };
+}
+function rcHeaderVals(c) {
+  if (!c._hk) {
+    c._hk = true;
+    window.addEventListener('scroll', (e) => { if (e.target && e.target.closest && e.target.closest('[role=listbox]')) return; if (c.state.cuOpen) c.setState({ cuOpen: false }); }, true);
+    window.addEventListener('resize', () => { if (c.state.cuOpen) c.setState({ cuOpen: false }); });
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && (c.state.aOpen || c.state.rOpen || c.state.oOpen || c.state.cuOpen)) c.setState({ aOpen: false, rOpen: false, oOpen: false, cuOpen: false }); });
+  }
+  const st = c.state || {};
+  const apps = [['cal','End date calculator'],['dollar','GST calculator'],['dollarf','Penalty calculator'],['send','Retrieve PEXA invitations'],['search','PEXA subscriber search'],['dollar','Stamp duty calculator']]
+    .map(([k, label]) => ({ label, cal: k === 'cal', dollar: k === 'dollar', dollarf: k === 'dollarf', send: k === 'send', search: k === 'search' }));
+  const S = { 'In progress': ['#E6EEF8','#14335C'], 'Cancelled': ['#F1F4F8','#5A6577'], 'Unassigned': ['#FEF0C7','#93370D'], 'Lodged': ['#FCEAF2','#A3335F'] };
+  const recent = [
+    ['00003','In progress','','','3 Overland Road Croydon Park SA 5008','Juin Ivan Lenkov','Contract of Sale','Both'],
+    ['00003','In progress','','','3 Overland Road Croydon Park SA 5008','Michael Kellog','Contract of Sale','Both'],
+    ['00109','In progress','','','4000 Yorke Highway Dowlingville SA 5571','Nishy SA Properties**','Contract of Sale','Proprietor on Title'],
+    ['00169','Cancelled','21/10/2026','03:16 PM','5 Almond Circuit Munno Para West SA 5115','Thilina Harsha','Contract of Sale','Proprietor on Title'],
+    ['00008','Unassigned','','','6 Leicester Street Carlton VIC 3053','Renee Thomas','Contract of Sale','Proprietor on Title'],
+    ['00032','Lodged','30/01/2026','04:52 PM','20 January Street Adelaide SA 5000','Cassie SA Green','Application','Both'],
+    ['00032','Lodged','30/01/2026','04:52 PM','20 January Street Adelaide SA 5000','Budy SA Smith','Application','Both']
+  ].map(([ref,status,date,time,addr,rep,type,acting]) => ({ ref, status, date, time, when: !!date, addr, rep, type, acting,
+    bg: S[status][0], fg: S[status][1], href: ref === '00003' ? 'matter-overview.html' : '#' }));
+  return {
+    apps, recent,
+    ...(() => {
+      const stItems = [
+        { ref: '00334', addr: '56 Thomas Street West Perth WA 6005 Australia', acting: 'Proprietor on Title', party: 'Nishy perth properties', type: 'Contract of Sale', status: 'Settled', href: 'matter-overview.html' },
+        { ref: '00341', addr: '12 Rundle Street Kent Town SA 5067 Australia', acting: 'Both', party: 'Cassie SA Green', type: 'Contract of Sale', status: 'Completed', href: 'matter-overview.html' }
+      ];
+      return { stItems, stCount: stItems.length, stEmpty: stItems.length === 0 };
+    })(),
+    ...(() => {
+      const sel = st.cuSel || 'Next 28 days';
+      const opts = [['Next 7 days'],['Next 14 days'],['Next 21 days'],['Next 28 days'],['This month'],['Next month'],['Custom date range','27/10/2026 to 17/11/2026']];
+      return {
+        cuOpen: !!st.cuOpen, cuExp: st.cuOpen ? 'true' : 'false', cuLabel: sel, cuRot: st.cuOpen ? 'rotate(180deg)' : 'none', cuBorder: st.cuOpen ? '#14335C' : '#D5DCE6',
+        cuTop: st.cuPos ? st.cuPos.top : 'auto', cuBottom: st.cuPos ? st.cuPos.bottom : 'auto', cuRight: st.cuPos ? st.cuPos.right : '0', cuMaxH: st.cuPos ? st.cuPos.maxH : 'none',
+        cuToggle: (e) => {
+          if (st.cuOpen) { c.setState({ cuOpen: false }); return; }
+          let pos = null;
+          try {
+            const r = e.currentTarget.getBoundingClientRect(), H = 330, G = 4, M = 8;
+            const below = window.innerHeight - r.bottom - G - M, above = r.top - G - M;
+            const right = Math.max(M, window.innerWidth - r.right) + 'px';
+            pos = (below >= H || below >= above)
+              ? { top: (r.bottom + G) + 'px', bottom: 'auto', right, maxH: below + 'px' }
+              : { top: 'auto', bottom: (window.innerHeight - r.top + G) + 'px', right, maxH: above + 'px' };
+          } catch (err) {}
+          c.setState({ cuOpen: true, cuPos: pos, aOpen: false, oOpen: false });
+        },
+        cuClose: () => c.setState({ cuOpen: false }),
+        cuOpts: opts.map(([label, sub]) => ({ label, sub: sub || '', sel: label === sel ? 'true' : 'false', bg: label === sel ? '#EEF2F7' : 'transparent', fw: label === sel ? 600 : 400,
+          pick: () => c.setState({ cuSel: label, cuOpen: false }) }))
+      };
+    })(),
+    orgItems: [['Dashboard'],['Trust Account',[['Organisation Ledger'],['Fees'],['GST'],['Costs & Disbursements'],['test 22 jan'],['test 22 jan 2']]],['Auto Finance'],['Workflows',[['Contract of Sale',1]]],['Templates'],['Brochures'],['Councils'],['Staff Profiles'],['Powers and Estates'],['Settings']]
+      .map(([label, subs]) => ({ label, sub: !!subs, pop: subs ? 'menu' : 'false', subs: (subs || []).map(([l, s]) => ({ label: l, sub: !!s })) })),
+    oOpen: !!st.oOpen, oExp: st.oOpen ? 'true' : 'false', oBg: st.oOpen ? '#EEF2F7' : 'transparent',
+    oToggle: () => c.setState({ oOpen: !st.oOpen, aOpen: false, rOpen: false }),
+    oClose: () => c.setState({ oOpen: false }),
+    aOpen: !!st.aOpen, aExp: st.aOpen ? 'true' : 'false', rOpen: !!st.rOpen, rExp: st.rOpen ? 'true' : 'false',
+    aToggle: () => c.setState({ aOpen: !st.aOpen, rOpen: false, oOpen: false }),
+    aClose: () => c.setState({ aOpen: false }),
+    rOpenFn: () => c.setState({ rOpen: true, aOpen: false, oOpen: false }),
+    rClose: () => c.setState({ rOpen: false })
+  };
+}
+const DP_MON = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+function dpAdd(iso, n) { const t = new Date(iso + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); }
+function dpFmt(iso) { const [y, m, d] = iso.split('-'); return d + '/' + m + '/' + y; }
+function dpYm(ym, n) { let [y, m] = ym.split('-').map(Number); m += n; while (m > 12) { m -= 12; y++; } while (m < 1) { m += 12; y--; } return y + '-' + String(m).padStart(2, '0'); }
+function dpLast(ym) { const [y, m] = ym.split('-').map(Number); return ym + '-' + String(new Date(Date.UTC(y, m, 0)).getUTCDate()).padStart(2, '0'); }
+function rangeText(v) { if (!v) return 'Any date'; if (v.preset) return v.preset; return v.from === v.to ? dpFmt(v.from) : dpFmt(v.from) + ' – ' + dpFmt(v.to); }
+function dpPresetList(T) {
+  const ym = T.slice(0, 7), y = +T.slice(0, 4), fyStart = (+T.slice(5, 7) >= 7 ? y : y - 1) - 1;
+  return [['Today', T, T], ['Yesterday', dpAdd(T, -1), dpAdd(T, -1)], ['Tomorrow', dpAdd(T, 1), dpAdd(T, 1)],
+    ['Last 7 days', dpAdd(T, -6), T], ['Next 7 days', T, dpAdd(T, 6)], ['Last 14 days', dpAdd(T, -13), T], ['Next 14 days', T, dpAdd(T, 13)],
+    ['Last 30 days', dpAdd(T, -29), T], ['Next 30 days', T, dpAdd(T, 29)],
+    ['This month', ym + '-01', dpLast(ym)], ['Last month', dpYm(ym, -1) + '-01', dpLast(dpYm(ym, -1))], ['Next month', dpYm(ym, 1) + '-01', dpLast(dpYm(ym, 1))],
+    ['Last financial year', fyStart + '-07-01', (fyStart + 1) + '-06-30']];
+}
+function dpVals(c, D, T) {
+  const st = c.state || {}, p = st.dp;
+  if (!p) return { dpOpen: false };
+  const set = (x) => c.setState({ dp: { ...p, ...x } });
+  const close = () => c.setState({ dp: null });
+  const presets = dpPresetList(T);
+  const choose = (label, from, to) => set({ from, to, preset: label, edit: 'from', view: from.slice(0, 7) });
+  const pickDay = (iso) => {
+    if (p.edit === 'to' && p.from && iso >= p.from) set({ to: iso, preset: '', edit: 'from' });
+    else if (p.edit === 'to' && p.from && iso < p.from) set({ from: iso, to: p.from, preset: '', edit: 'from' });
+    else set({ from: iso, to: null, preset: '', edit: 'to' });
+  };
+  const month = (ym) => {
+    const [y, m] = ym.split('-').map(Number), first = new Date(Date.UTC(y, m - 1, 1)).getUTCDay(), lead = (first + 6) % 7, n = +dpLast(ym).slice(8);
+    const days = [];
+    for (let i = 0; i < lead; i++) days.push({ real: false, band: 'transparent', bandR: '0' });
+    for (let dn = 1; dn <= n; dn++) {
+      const iso = ym + '-' + String(dn).padStart(2, '0');
+      const isFrom = iso === p.from, isTo = iso === (p.to || p.from), end = isFrom || (p.to && iso === p.to);
+      const inside = p.from && p.to && iso > p.from && iso < p.to;
+      const ranged = p.from && p.to && p.from !== p.to;
+      days.push({ real: true, n: dn, sel: end ? 'true' : 'false',
+        aria: dn + ' ' + DP_MON[m - 1] + ' ' + y + (iso === T ? ', today' : ''),
+        bg: end ? '#14335C' : 'transparent', fg: end ? '#fff' : '#172234', fw: end || iso === T ? 700 : 400,
+        ring: iso === T && !end ? 'inset 0 0 0 1px #9AAAC0' : 'none',
+        band: inside || (ranged && end) ? '#E6EEF8' : 'transparent',
+        bandR: ranged && isFrom ? '999px 0 0 999px' : ranged && iso === p.to ? '0 999px 999px 0' : '0',
+        pick: () => pickDay(iso) });
+    }
+    return { title: DP_MON[m - 1] + ' ' + y, days };
+  };
+  const ndays = p.from && p.to ? Math.round((Date.parse(p.to) - Date.parse(p.from)) / 864e5) + 1 : 0;
+  const nInput = (key, dir) => (e) => { const n = Math.max(1, Math.min(999, parseInt(e.target.value, 10) || 1));
+    const from = dir < 0 ? dpAdd(T, -(n - 1)) : T, to = dir < 0 ? T : dpAdd(T, n - 1);
+    set({ [key]: n, from, to, preset: n + (dir < 0 ? ' days up to today' : ' days starting today'), edit: 'from', view: from.slice(0, 7) }); };
+  const y0 = +T.slice(0, 4);
+  return {
+    dpOpen: true, dpTitle: p.title,
+    dpStop: (e) => e.stopPropagation(), dpClose: close,
+    dpKey: (e) => { if (e.key === 'Escape') { e.stopPropagation(); close(); } },
+    dpPresets: presets.map(([label, from, to]) => { const on = p.preset === label; return { label, on: on ? 'true' : 'false',
+      bg: on ? '#EEF2F7' : 'transparent', fg: on ? '#14335C' : '#172234', fw: on ? 700 : 400, pick: () => choose(label, from, to) }; }),
+    dpNUp: p.nUp, dpNStart: p.nStart, dpNUpChange: nInput('nUp', -1), dpNStartChange: nInput('nStart', 1),
+    dpFromText: p.from ? dpFmt(p.from) : 'Start date', dpToText: p.to ? dpFmt(p.to) : 'End date',
+    dpFromColor: p.from ? '#172234' : '#5A6577', dpToColor: p.to ? '#172234' : '#5A6577',
+    dpFromOn: p.edit === 'from' ? 'true' : 'false', dpToOn: p.edit === 'to' ? 'true' : 'false',
+    dpFromBorder: p.edit === 'from' ? '#14335C' : '#D5DCE6', dpToBorder: p.edit === 'to' ? '#14335C' : '#D5DCE6',
+    dpFromBg: p.edit === 'from' ? '#F5F8FC' : '#fff', dpToBg: p.edit === 'to' ? '#F5F8FC' : '#fff',
+    dpEditFrom: () => set({ edit: 'from', view: p.from ? p.from.slice(0, 7) : p.view }),
+    dpEditTo: () => set({ edit: p.from ? 'to' : 'from' }),
+    dpPrev: () => set({ view: dpYm(p.view, -1) }), dpNext: () => set({ view: dpYm(p.view, 1) }), dpToday: () => set({ view: T.slice(0, 7) }),
+    dpMonth: String(+p.view.slice(5, 7)), dpYear: p.view.slice(0, 4),
+    dpMonths: DP_MON.map((label, i) => ({ v: String(i + 1), label })),
+    dpYears: Array.from({ length: 9 }, (_, i) => String(y0 - 5 + i)),
+    dpMonthChange: (e) => set({ view: p.view.slice(0, 4) + '-' + String(e.target.value).padStart(2, '0') }),
+    dpYearChange: (e) => set({ view: e.target.value + p.view.slice(4) }),
+    dpDow: ['Mo','Tu','We','Th','Fr','Sa','Su'],
+    dpCals: [month(p.view), month(dpYm(p.view, 1))],
+    dpSummary: !p.from ? 'Pick a start date, or choose a preset' : !p.to ? dpFmt(p.from) + ' – pick an end date' :
+      (p.preset ? p.preset + ' · ' : '') + rangeText({ from: p.from, to: p.to }) + ' · ' + ndays + ' day' + (ndays === 1 ? '' : 's'),
+    dpCantApply: !(p.from && p.to), dpApplyOp: p.from && p.to ? 1 : 0.45,
+    dpClear: () => c.setState({ dp: null, mD: { ...D, [p.k]: null } }),
+    dpApply: () => { if (!(p.from && p.to)) return; c.setState({ dp: null, mD: { ...D, [p.k]: { from: p.from, to: p.to, preset: p.preset || '' } } }); }
+  };
+}
+function rcMattersVals(c) {
+  const st = c.state || {};
+  const q = (st.mq || '').trim().toLowerCase();
+  const tab = st.mTab || 'all';
+  const sort = st.mSort || { key: 'date', dir: 'asc' };
+  const DEF = { sdue: null, renew: null, asg: ['Nishadi WA'], cond: 'all', actual: null, status: [], acting: [], type: [] };
+  const NONE = { ...DEF, asg: [] };
+  const F = st.mF || DEF, D = st.mD || F;
+  const FIELDS = [
+    ['sdue', 'Settlement due date', 'Booked settlement date for matters not yet settled', null],
+    ['renew', 'Renewal date', 'Date the matter is due for renewal', null],
+    ['asg', 'Assignees', '', [['Nishadi WA','Nishadi WA'],['Unassigned','Unassigned',1],['Anna WA-Proaxiom','Anna WA-Proaxiom'],['Darshana WA','Darshana WA'],['Deshani WA','Deshani WA'],['Dimuth WA','Dimuth WA'],['Eve Stark','Eve Stark'],['Harsha WA','Harsha WA'],['Jason Goldsmith','Jason Goldsmith'],['Jayani Test user','Jayani Test user'],['John Harrington','John Harrington']], 'multi'],
+    ['cond', 'Conditional', '', [['all','All'],['conditional','Conditional'],['unconditional','Unconditional']]],
+    ['actual', 'Actual settlement / lodgement date', '', null],
+    ['status', 'Statuses', '', [['Unassigned','Unassigned'],['In progress','In Progress'],['Booked','Booked'],['Settled','Settled'],['Closed','Closed'],['Cancelled','Cancelled']], 'multi'],
+    ['acting', 'Acting for', '', [['Incoming Proprietor','Buyer'],['Proprietor on Title','Seller'],['Both','Both']], 'multi'],
+    ['type', 'Matter type', '', [['Contract of Sale','Contract of Sale']], 'multi']
+  ];
+  const isDef = (k, v) => v == null || v === 'all' || (Array.isArray(v) && v.length === 0);
+  const inM = (arr, x) => !arr || arr.length === 0 || arr.includes(x);
+  const addDays = (iso, n) => { const t = new Date(iso + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); };
+  const ACT = { 'Both': '#14335C', 'Proprietor on Title': '#E98BB5', 'Incoming Proprietor': '#3E8E7E' };
+  const base = [
+    ['00336','2026-10-22','Incoming Proprietor','11 Stuart Crescent','Lesmurdie WA 6076','Nishy perth properties','In progress'],
+    ['00334','2026-10-27','Proprietor on Title','56 Thomas Street','West Perth WA 6005','Nishy perth properties','Settled','27/10/2026 · 09:33 AM'],
+    ['00340','','Both','11 Stuart Crescent','Lesmurdie WA 6076','Nishy perth properties','In progress'],
+    ['00340','','Both','11 Stuart Crescent','Lesmurdie WA 6076','nish','In progress'],
+    ['00333','','Incoming Proprietor','56 Thomas Street','Nedlands WA 6009','Nishy perth properties','In progress'],
+    ['00332','','Proprietor on Title','11 Stuart Crescent','Lesmurdie WA 6076','React Update Test','In progress'],
+    ['00346','','Proprietor on Title','11 Mounts Bay Road','Perth WA 6000','Nishy perth properties','In progress'],
+    ['00342','','Both','5800 Riley Road','Mount Helena WA 6082','Nishy perth properties','In progress'],
+    ['00342','','Both','5800 Riley Road','Mount Helena WA 6082','Nishy perth properties','In progress'],
+    ['00339','','Proprietor on Title','138 Wright Street','Kewdale WA 6105','Nishy perth properties','In progress']
+  ].map(([ref, iso, acting, street, suburb, rep, status, stWhen], i) => ({ i, ref, iso, acting, street, suburb, rep, status, stWhen: stWhen || '',
+    type: 'Contract of Sale', workflow: 'Contract of Sale', assignee: 'Nishadi WA', renew: '', cond: '', actual: status === 'Settled' ? iso : '' }));
+  const fmt = (iso) => { const [y, m, d] = iso.split('-'); return d + '/' + m + '/' + y; };
+  const today = '2026-10-27';
+  const T = '2026-10-27';
+  const inR = (iso, v) => !v || (!!iso && iso >= v.from && iso <= v.to);
+  const fRows = base.filter(r => (!F.sdue || (r.status !== 'Settled' && inR(r.iso, F.sdue))) && inR(r.renew, F.renew)
+    && inM(F.asg, r.assignee) && (F.cond === 'all' || r.cond === F.cond) && inR(r.actual, F.actual)
+    && inM(F.status, r.status) && inM(F.acting, r.acting) && inM(F.type, r.type));
+  let rows = fRows.filter(r => tab === 'all' || (tab === 'progress' ? r.status === 'In progress' : r.status === 'Settled'));
+  if (q) rows = rows.filter(r => [r.ref, r.street, r.suburb, r.rep, r.acting, r.assignee].join(' ').toLowerCase().includes(q));
+  const keyOf = { ref: r => r.ref, date: r => r.iso || '9999', addr: r => r.street + ' ' + r.suburb, rep: r => r.rep.toLowerCase(), acting: r => r.acting, assignee: r => r.assignee, status: r => r.status };
+  const kf = keyOf[sort.key] || keyOf.date, dir = sort.dir === 'desc' ? -1 : 1;
+  rows = rows.slice().sort((a, b) => { const x = kf(a), y = kf(b); return (x < y ? -1 : x > y ? 1 : a.i - b.i) * dir; });
+  const cols = [['ref','Reference','14%'],['date','Settlement / lodgement','15%'],['addr','Property address','20%'],['rep','Representing','16%'],['acting','Acting for','14%'],['assignee','Assignee','12%'],['status','Status','11%']]
+    .map(([key, label, w]) => { const on = sort.key === key; return { key, label, w, sortable: true, plain: false,
+      ariaSort: on ? (sort.dir === 'asc' ? 'ascending' : 'descending') : 'none', color: on ? '#14335C' : '#5A6577',
+      upFill: on && sort.dir === 'asc' ? '#14335C' : '#B9C6D8', downFill: on && sort.dir === 'desc' ? '#14335C' : '#B9C6D8',
+      sort: () => c.setState({ mSort: { key, dir: on && sort.dir === 'asc' ? 'desc' : 'asc' } }) }; });
+  const counts = { all: fRows.length, progress: fRows.filter(r => r.status === 'In progress').length, settled: fRows.filter(r => r.status === 'Settled').length };
+  const chips = FIELDS.filter(([k]) => !isDef(k, F[k])).map(([k, label, , opts]) => ({
+    label: (k === 'asg' ? 'Assignee' : label) + ': ' + (!opts ? rangeText(F[k]) : Array.isArray(F[k]) ? F[k].map(v => (opts.find(o => o[0] === v) || [, v])[1]).join(', ') : (opts.find(o => o[0] === F[k]) || [, F[k]])[1]),
+    remove: () => { const nf = { ...F, [k]: NONE[k] }; c.setState({ mF: nf, mD: nf }); } }));
+  const fv = {
+    fOpen: !!st.fOpen, fExp: st.fOpen ? 'true' : 'false', fBg: st.fOpen ? '#EEF2F7' : '#fff', fBorder: st.fOpen ? '#14335C' : '#D5DCE6',
+    fToggle: () => c.setState({ fOpen: !st.fOpen, mD: F }),
+    fReset: () => c.setState({ mD: DEF }),
+    fApply: () => c.setState({ mF: D, fOpen: false, msOpen: null }),
+    fFields: FIELDS.map(([k, label, info, opts, kind]) => ({ id: 'f-' + k, label, info, isDate: !opts, isSel: !!opts && kind !== 'multi', isMulti: kind === 'multi',
+      msOpen: st.msOpen === k, msExp: st.msOpen === k ? 'true' : 'false', msRot: st.msOpen === k ? 'rotate(180deg)' : 'none',
+      msToggle: () => c.setState({ msOpen: st.msOpen === k ? null : k }), msClose: () => c.setState({ msOpen: null }),
+      msText: kind !== 'multi' ? '' : !D[k].length ? 'All' : D[k].length === 1 ? (opts.find(o => o[0] === D[k][0]) || [, D[k][0]])[1] : (opts.find(o => o[0] === D[k][0]) || [, D[k][0]])[1] + ' +' + (D[k].length - 1),
+      msOpts: kind !== 'multi' ? [] : opts.map(([v, l, div]) => ({ v, label: l, div: !!div, id: 'ms-' + k + '-' + v.replace(/[^A-Za-z0-9]/g, ''), on: D[k].includes(v),
+        toggle: (e) => { const on = e.target.checked, cur = D[k].filter(x => x !== v); c.setState({ mD: { ...D, [k]: on ? opts.map(o => o[0]).filter(x => cur.includes(x) || x === v) : cur } }); } })),
+      msAllClear: () => c.setState({ mD: { ...D, [k]: [] } }),
+      value: opts ? D[k] : '', display: opts ? '' : (D[k] ? rangeText(D[k]) : 'Any date'),
+      color: isDef(k, D[k]) ? '#5A6577' : '#172234', border: isDef(k, D[k]) ? '#D5DCE6' : '#14335C',
+      opts: (opts || []).map(([v, l]) => ({ v, label: l })), change: (e) => c.setState({ mD: { ...D, [k]: e.target.value } }),
+      open: () => { const v = D[k]; c.setState({ dp: { k, title: label, from: v ? v.from : null, to: v ? v.to : null, preset: v ? v.preset || '' : '', edit: 'from',
+        view: (v ? v.from : T).slice(0, 7), nUp: 1, nStart: 1 } }); } })),
+    ...dpVals(c, D, T)
+  };
+  return {
+    mq: st.mq || '',
+    mqInput: (e) => c.setState({ mq: e.target.value }),
+    mSummary: (chips.length ? counts.all + ' matching' : counts.all + ' matters') + ' · ' + counts.progress + ' in progress · ' + counts.settled + ' settled',
+    mTabs: [['all','All'],['progress','In progress'],['settled','Settled']].map(([k, label]) => ({ label, count: counts[k], pressed: tab === k ? 'true' : 'false', pick: () => c.setState({ mTab: k }) })),
+    mChips: chips, mHasChips: chips.length > 0, mChipCount: chips.length, mHasApplied: chips.length > 0,
+    mClearAll: () => c.setState({ mF: NONE, mD: NONE, mq: '', mTab: 'all' }),
+    ...fv,
+    mCols: cols,
+    mRows: rows.map(r => ({ ...r, href: 'matter-overview.html',
+      typeLine: r.type === r.workflow ? r.type : r.type + ' · ' + r.workflow + ' workflow',
+      hasDate: !!r.iso, noDate: !r.iso, date: r.iso ? fmt(r.iso) : '',
+      dateNote: !r.iso ? '' : r.status === 'Settled' ? 'Settled' : r.iso < today ? 'Overdue' : r.iso === today ? 'Today' : 'Upcoming',
+      dateNoteColor: r.status !== 'Settled' && r.iso && r.iso < today ? '#B42318' : '#5A6577',
+      actDot: ACT[r.acting] || '#9AA7B8', initials: 'NW',
+      stBg: r.status === 'Settled' ? '#DCFAE6' : '#E6EEF8', stFg: r.status === 'Settled' ? '#067647' : '#14335C' })),
+    mEmpty: rows.length === 0,
+    mRange: rows.length ? '1–' + rows.length + ' of ' + rows.length : '0 of 0'
+  };
+}
+function DD(c, id, opts, value, onPick, ph) {
+  const st = c.state || {}, open = st.ddOpen === id, pos = open ? (st.ddPos || {}) : {};
+  if (!c._ddL) { c._ddL = true;
+    window.addEventListener('scroll', (e) => { if (!(c.state || {}).ddOpen) return; if (e.target && e.target.closest && e.target.closest('.thlist2')) return; c.setState({ ddOpen: null }); }, true);
+    window.addEventListener('resize', () => { if ((c.state || {}).ddOpen) c.setState({ ddOpen: null }); }); }
+  const cur = opts.find(o => String(o.v) === String(value));
+  return { label: cur ? cur.l : (ph || 'Select'), lc: cur ? '#172234' : '#5A6577', open, exp: open ? 'true' : 'false', rot: open ? 'rotate(180deg)' : 'none', bd: open ? '#14335C' : '#D5DCE6',
+    lt: pos.top || 'auto', lb: pos.bottom || 'auto', ll: pos.left || '0', lw: pos.width || '200px', lmh: pos.maxH || '320px',
+    toggle: (e) => { if (open) { c.setState({ ddOpen: null }); return; } let p = {};
+      try { const r = e.currentTarget.getBoundingClientRect(), H = Math.min(320, opts.length * 40 + 14), W = Math.max(r.width, 180);
+        const below = window.innerHeight - r.bottom - 12, above = r.top - 12;
+        p = (below >= H || below >= above) ? { top: (r.bottom + 4) + 'px', bottom: 'auto', maxH: Math.max(120, below) + 'px' } : { top: 'auto', bottom: (window.innerHeight - r.top + 4) + 'px', maxH: Math.max(120, above) + 'px' };
+        p.left = Math.max(8, Math.min(r.left, window.innerWidth - W - 8)) + 'px'; p.width = W + 'px'; } catch (x) {}
+      c.setState({ ddOpen: id, ddPos: p }); },
+    close: (e) => { if (e && e.preventDefault) e.preventDefault(); c.setState({ ddOpen: null }); },
+    key: (e) => { if (e.key === 'Escape' && open) { e.stopPropagation(); c.setState({ ddOpen: null }); } },
+    opts: opts.map(o => { const on = String(o.v) === String(value);
+      return { label: o.l, on, sel: on ? 'true' : 'false', bg: on ? '#EEF2F7' : 'transparent', fw: on ? 700 : 500, fg: on ? '#14335C' : '#172234',
+        pick: (e) => { if (e && e.preventDefault) e.preventDefault(); c.setState({ ddOpen: null }); if (onPick) onPick(o.v); } }; }) };
+}
+function DDS(c, id, opts, def) { const st = c.state || {}, vals = st.ddVal || {}; const v = id in vals ? vals[id] : def;
+  return DD(c, id, opts, v, (x) => c.setState({ ddVal: { ...((c.state || {}).ddVal || {}), [id]: x } })); }
+function ddHook(c, v) {
+  const o = {};
+  if (v.fFields) o.fFields = v.fFields.map(ff => ff.isSel ? { ...ff, dd: DD(c, ff.id, ff.opts.map(x => ({ v: x.v, l: x.label })), ff.value, (x) => ff.change({ target: { value: x } })) } : ff);
+  o.dd_rpp = DDS(c, 'rpp', [{ v: "10", l: "10" }, { v: "25", l: "25" }, { v: "50", l: "50" }, { v: "100", l: "100" }], "25");
+  if (v.dpOpen) { o.ddMonth = DD(c, 'dp-month', v.dpMonths.map(x => ({ v: x.v, l: x.label })), v.dpMonth, (x) => v.dpMonthChange({ target: { value: x } })); o.ddYear = DD(c, 'dp-year', v.dpYears.map(x => ({ v: x, l: x })), v.dpYear, (x) => v.dpYearChange({ target: { value: x } })); }
+  return o;
+}
+class Component extends DCLogic {
+  renderVals() { const v = { ...this._rv(), ...rcSearchVals(this), ...rcHeaderVals(this), ...rcMattersVals(this) }; return { ...v, ...ddHook(this, v) }; }
+  constructor(p){ super(p); this.state = { sel: null }; }
+  _rv() {
+    const stages = [
+      ['Conditional', 3, '#A3335F', '#F2B8D2', '#FCEAF2'],
+      ['Unconditional', 0, '#1F5FA8', '#A9C8EC', '#EAF2FB'],
+      ['Nearing settlement', 0, '#8A5300', '#F5D29A', '#FDF3E1'],
+      ['Settling today', 0, '#1A6B45', '#A8DCC0', '#E8F6EE']
+    ].map(([label, n, c, pastel, tint]) => ({
+      label, value: n, aria: label + ': ' + n + ' matters',
+      bar: pastel, numColor: c, tint
+    }));
+    const unit = 30;
+
+    const UP = [
+      { g: 'week', day: '23', mon: 'Oct', title: 'Settlement', kind: 'Settlement', ref: '00012', addr: '14 Prospect Road, Prospect SA 5082', parties: ['Grace Tan', 'Liam Walsh'], acting: 'Both', when: 'In 4 days' },
+      { g: 'later', day: '28', mon: 'Oct', title: 'Settlement', kind: 'Settlement', ref: '00015', addr: '7 Hill Street, Glenelg SA 5045', parties: ['Priya Nair'], acting: 'Vendor', when: 'In 9 days' }
+    ];
+    const GDEF = { overdue: ['Overdue', '#B42318', '#FEE4E2'], week: ['This week', '#14335C', '#E6EEF8'], later: ['Later', '#3A4657', '#F1F4F8'] };
+    const upGroups = ['overdue', 'week', 'later'].map(k => {
+      const items = UP.filter(u => u.g === k).map(u => {
+        const od = k === 'overdue', st = u.kind === 'Settlement';
+        return { ...u,
+          parties: u.parties.join(', '),
+          partyShort: u.parties[0] + (u.parties.length > 1 ? ' +' + (u.parties.length - 1) : ''),
+          dateBg: od ? '#FEE4E2' : (st ? '#E6EEF8' : '#F1F4F8'), dateFg: od ? '#B42318' : '#14335C',
+          kindBg: st ? '#E6EEF8' : '#F1F4F8', kindFg: st ? '#14335C' : '#3A4657',
+          whenColor: od ? '#B42318' : '#5A6577' };
+      });
+      return { label: GDEF[k][0], color: GDEF[k][1], chipBg: GDEF[k][2], count: items.length, items };
+    }).filter(g => g.items.length);
+    const fullNames = { 'Oct 26':'October 2026','Nov 26':'November 2026','Dec 26':'December 2026','Jan 27':'January 2027','Feb 27':'February 2027','Mar 27':'March 2027','Apr 27':'April 2027','May 27':'May 2027' };
+    const months = [
+      ['Oct 26',1,1],['Nov 26',0,1],['Dec 26',2,0],['Jan 27',1,3],['Feb 27',2,1],['Mar 27',1,1],['Apr 27',1,1],['May 27',2,0]
+    ].map(([label,both,pot]) => ({ label, both, pot, full: fullNames[label], total: both+pot, tipB: ((both+pot)*unit + 32)+'px', hBoth: (both*unit)+'px', hPot: (pot*unit)+'px',
+      aria: fullNames[label] + ': ' + (both+pot) + ' settlements, ' + both + ' both parties, ' + pot + ' proprietor on title. Show list.',
+      open: () => this.setState({ sel: this.state.sel === label ? null : label }) }));
+    const nM = months.length;
+    months.forEach((m, i) => {
+      m.key = i; m.isSel = this.state.sel === m.label; m.noSel = !m.isSel; m.exp = m.isSel ? 'true' : 'false';
+      m.plural = m.total === 1 ? '' : 's';
+      m.breakdown = [m.both ? m.both + ' both parties' : '', m.pot ? m.pot + ' proprietor on title' : ''].filter(Boolean).join(', ');
+      m.btnBg = m.isSel ? '#EEF2F7' : 'transparent';
+      if (i < 2) { m.left = '0'; m.right = 'auto'; m.tx = 'none'; m.caret = 'calc(50% - 6px)'; m.caret = '40px'; }
+      else if (i > nM - 3) { m.left = 'auto'; m.right = '0'; m.tx = 'none'; m.caret = 'calc(100% - 52px)'; }
+      else { m.left = '50%'; m.right = 'auto'; m.tx = 'translateX(-50%)'; m.caret = 'calc(50% - 6px)'; }
+    });
+    const selM = months.find(m => m.label === this.state.sel);
+    let sel = false;
+    if (selM) {
+      const B = 'both', P = 'pot';
+      const sample = {
+        'Oct 26': [[B,'00012','14 Prospect Road, Prospect','Fri 23 Oct'],[P,'00015','7 Hill Street, Glenelg','Wed 28 Oct']],
+        'Nov 26': [[P,'00018','22 Henley Beach Road, Mile End','Thu 12 Nov']],
+        'Dec 26': [[B,'00021','5 Kensington Road, Norwood','Fri 4 Dec'],[B,'00023','31 Main North Road, Enfield','Fri 18 Dec']],
+        'Jan 27': [[B,'00026','9 Unley Road, Unley','Fri 8 Jan'],[P,'00027','48 Goodwood Road, Wayville','Thu 14 Jan'],[P,'00029','3 Marion Road, Plympton','Thu 21 Jan'],[P,'00030','16 Port Road, Hindmarsh','Thu 28 Jan']],
+        'Feb 27': [[B,'00032','11 The Parade, Norwood','Fri 5 Feb'],[B,'00034','27 Magill Road, Stepney','Fri 19 Feb'],[P,'00035','60 Grange Road, Welland','Wed 24 Feb']],
+        'Mar 27': [[B,'00037','8 Fullarton Road, Parkside','Thu 11 Mar'],[P,'00038','19 Brighton Road, Glenelg South','Thu 25 Mar']],
+        'Apr 27': [[B,'00041','2 Payneham Road, St Peters','Fri 9 Apr'],[P,'00043','33 Anzac Highway, Everard Park','Thu 22 Apr']],
+        'May 27': [[B,'00045','12 North East Road, Walkerville','Fri 7 May'],[B,'00047','41 Tapleys Hill Road, Fulham','Thu 20 May']]
+      };
+      const items = (sample[selM.label] || []).map(([t, ref, addr, date]) => t === B
+        ? { ref, addr, date, type: 'Both parties', color: '#14335C' }
+        : { ref, addr, date, type: 'Proprietor on title', color: '#F2A7C8' });
+      const parts = [];
+      if (selM.both) parts.push(selM.both + ' both parties');
+      if (selM.pot) parts.push(selM.pot + ' proprietor on title');
+      sel = { full: selM.full, items, summary: selM.total + (selM.total === 1 ? ' matter' : ' matters') + ' · ' + parts.join(', ') };
+    }
+    const settlements = {
+      23: [{ color: '#14335C', type: 'Both parties', m: '00012 · 14 Prospect Road, Prospect' }],
+      28: [{ color: '#E27AAA', type: 'Proprietor on title', m: '00015 · 7 Hill Street, Glenelg' }]
+    };
+    const days = [];
+    for (let i = 0; i < 3; i++) days.push({ n: '', bg: 'transparent', fg: '#172234', fw: 400, dots: [], tip: false, tab: '-1', aria: '' });
+    for (let d = 1; d <= 31; d++) {
+      const today = d === 19;
+      const s = settlements[d] || [];
+      const tip = s.length ? s.map(x => 'Settlement · ' + x.type + '\n' + x.m).join('\n\n') : false;
+      days.push({
+        n: d, dots: s.map(x => x.color), tip,
+        tab: s.length ? '0' : '-1',
+        aria: d + ' October' + (today ? ', today' : '') + (s.length ? ', ' + s.length + ' settlement: ' + s.map(x => x.type).join(', ') : ''),
+        bg: today ? '#14335C' : (s.length ? '#EEF2F7' : 'transparent'),
+        fg: today ? '#fff' : (d < 19 ? '#5A6577' : '#172234'),
+        fw: today || s.length ? 700 : 400
+      });
+    }
+    return {
+      stages, months, days, sel, upGroups, upEmpty: upGroups.length === 0,
+      closeSel: () => this.setState({ sel: null }),
+      selKey: (e) => { if (e.key === 'Escape') this.setState({ sel: null }); },
+      dow: ['Mo','Tu','We','Th','Fr','Sa','Su']
+    };
+  }
+}
+</script>
+</body>
+</html>

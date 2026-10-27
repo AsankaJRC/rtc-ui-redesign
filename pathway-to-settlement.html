@@ -1,0 +1,1121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>00334 Pathway to settlement — Realtime Conveyancer</title>
+<script src="js/pathway-to-settlement-source.js"></script>
+<script src="js/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/pathway-to-settlement.css">
+</helmet>
+<div style="font-family:'Source Sans 3',ui-sans-serif,system-ui,sans-serif;color:#172234;font-size:15px;line-height:1.45;min-height:100vh;background:#F4F6F9">
+
+<!-- Top bar -->
+<header style="background:#fff;border-bottom:1px solid #E3E8EF">
+<div style="max-width:1360px;margin:0 auto;padding:10px 24px;display:flex;flex-wrap:wrap;align-items:center;gap:16px">
+<a href="#" style="display:flex;align-items:center;text-decoration:none;padding:4px 0">
+<img src="images/realtime-logo.png" alt="Realtime Conveyancer home" style="height:36px;width:auto;display:block">
+</a>
+<nav aria-label="Primary" style="display:flex;flex-wrap:wrap;gap:2px;flex:1 1 auto">
+<a class="navlink" href="index.html">Dashboard</a>
+<a class="navlink" href="matters.html" aria-current="page" style="background:#EEF2F7;color:#14335C;font-weight:600">Matters</a>
+<a class="navlink" href="#">Diary</a>
+<a class="navlink" href="#">Quotes</a>
+<a class="navlink" href="#">Contacts</a>
+<div style="position:relative">
+<button onClick="{{oToggle}}" class="navlink" aria-haspopup="menu" aria-expanded="{{oExp}}" style="border:0;background:{{oBg}};font-size:inherit;display:flex;align-items:center;gap:4px">Organisation<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 9h12l-6 7z"></path></svg></button>
+<sc-if value="{{oOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{oClose}}" aria-hidden="true" style="position:fixed;inset:0;z-index:50"></div>
+<div role="menu" aria-label="Organisation" style="position:absolute;top:calc(100% + 6px);left:0;z-index:51;min-width:220px;background:#fff;border:1px solid #E3E8EF;border-radius:10px;box-shadow:0 12px 32px rgba(20,51,92,.18);padding:6px">
+<sc-for list="{{orgItems}}" as="oi" hint-placeholder-count="10">
+<div class="orgwrap">
+<a role="menuitem" href="#" class="orgitem" aria-haspopup="{{oi.pop}}" onClick="{{oClose}}">{{oi.label}}<sc-if value="{{oi.sub}}" hint-placeholder-val="{{false}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="#3A4657" aria-hidden="true"><path d="M9 6l7 6-7 6z"></path></svg></sc-if></a>
+<sc-if value="{{oi.sub}}" hint-placeholder-val="{{false}}">
+<div aria-label="{{oi.label}}" class="orgsub" role="menu" style="position:absolute;left:100%;top:-6px;z-index:52;min-width:220px;background:#fff;border:1px solid #E3E8EF;border-radius:10px;box-shadow:0 12px 32px rgba(20,51,92,.18);padding:6px">
+<sc-for list="{{oi.subs}}" as="s" hint-placeholder-count="3">
+<div class="orgwrap">
+<a role="menuitem" href="#" class="orgitem" onClick="{{oClose}}">{{s.label}}<sc-if value="{{s.sub}}" hint-placeholder-val="{{false}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="#3A4657" aria-hidden="true"><path d="M9 6l7 6-7 6z"></path></svg></sc-if></a>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</nav>
+<button style="display:flex;align-items:center;gap:6px;background:#14335C;color:#fff;border:0;border-radius:10px;height:40px;padding:0 16px;font-weight:600;font-size:15px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>New</button>
+<div style="display:flex;align-items:center;gap:4px">
+<button onClick="{{rOpenFn}}" aria-label="Recent matters viewed" title="Recent matters viewed" aria-haspopup="dialog" aria-expanded="{{rExp}}" style="width:40px;height:40px;border:0;background:transparent;border-radius:10px;display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 103-6.7L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l3 2"></path></svg></button>
+<button aria-label="Notifications" style="width:40px;height:40px;border:0;background:transparent;border-radius:10px;display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2" aria-hidden="true"><path d="M6 8a6 6 0 1112 0c0 7 3 8 3 8H3s3-1 3-8"></path><path d="M10 20a2 2 0 004 0"></path></svg></button>
+<div style="position:relative">
+<button onClick="{{aToggle}}" aria-label="Apps" aria-haspopup="menu" aria-expanded="{{aExp}}" style="width:40px;height:40px;border:0;background:transparent;border-radius:10px;display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"></rect><rect x="14" y="4" width="6" height="6" rx="1"></rect><rect x="4" y="14" width="6" height="6" rx="1"></rect><rect x="14" y="14" width="6" height="6" rx="1"></rect></svg></button>
+<sc-if value="{{aOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{aClose}}" aria-hidden="true" style="position:fixed;inset:0;z-index:50"></div>
+<div role="menu" aria-label="Apps" style="position:absolute;top:calc(100% + 6px);right:0;z-index:51;min-width:260px;background:#fff;border:1px solid #E3E8EF;border-radius:10px;box-shadow:0 12px 32px rgba(20,51,92,.18);padding:6px">
+<sc-for list="{{apps}}" as="ap" hint-placeholder-count="6">
+<a role="menuitem" href="#" class="appitem" onClick="{{aClose}}"><span aria-hidden="true" style="width:22px;display:grid;place-items:center;flex:none"><sc-if value="{{ap.cal}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="#14335C"><path d="M7 2h2v2h6V2h2v2h2a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2h2V2zm12 8H5v10h14V10zM7 12h4v4H7v-4z"></path></svg></sc-if><sc-if value="{{ap.dollar}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14335C" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M15 9.2c-.5-1-1.6-1.6-3-1.6-1.7 0-3 .9-3 2.2 0 3 6 1.6 6 4.5 0 1.3-1.3 2.2-3 2.2-1.4 0-2.6-.6-3.1-1.7M12 6v1.6M12 16.5V18"></path></svg></sc-if><sc-if value="{{ap.dollarf}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#14335C"></circle><path d="M15 9.2c-.5-1-1.6-1.6-3-1.6-1.7 0-3 .9-3 2.2 0 3 6 1.6 6 4.5 0 1.3-1.3 2.2-3 2.2-1.4 0-2.6-.6-3.1-1.7M12 6v1.6M12 16.5V18" fill="none" stroke="#fff" stroke-width="2"></path></svg></sc-if><sc-if value="{{ap.send}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="#14335C"><path d="M3 20l18-8L3 4v6l12 2-12 2z"></path></svg></sc-if><sc-if value="{{ap.search}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14335C" stroke-width="2.4" stroke-linecap="round"><circle cx="10" cy="10" r="6"></circle><path d="M20 20l-5.5-5.5"></path></svg></sc-if></span>{{ap.label}}</a>
+</sc-for>
+</div>
+</sc-if>
+</div>
+<button aria-label="Account: Asanka" style="display:flex;align-items:center;gap:8px;border:0;background:transparent;padding:4px 8px 4px 4px;border-radius:999px;font-size:14px;color:#172234">
+<span style="width:32px;height:32px;border-radius:50%;background:#14335C;color:#fff;display:grid;place-items:center;font-weight:600;font-size:13px">AP</span>Asanka</button>
+</div>
+</div>
+</header>
+
+<main class="ovgrid" style="--navw:{{navW}}">
+
+<!-- Matter header -->
+<header class="ovhead">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:13px;color:#5A6577">
+<nav aria-label="Breadcrumb"><a href="matters.html" style="color:#3A4657">Matters</a><span aria-hidden="true" style="margin:0 6px;color:#9AA7B8">›</span><a href="matter-overview.html" style="color:#3A4657">00334</a><span aria-hidden="true" style="margin:0 6px;color:#9AA7B8">›</span><span aria-current="page" style="color:#172234">Pathway to settlement</span></nav>
+<span style="display:inline-flex;align-items:center;gap:6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 103-6.7L3 8"></path><path d="M3 3v5h5"></path></svg>Recently viewed:<a href="#" style="text-decoration:underline">00003</a><a href="#" style="text-decoration:underline">00109</a></span>
+</div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-top:10px">
+<div>
+<h1 style="margin:0;font-size:24px;line-height:1.2;font-weight:700;color:#14335C">Pathway to settlement</h1>
+<p style="margin:2px 0 0;font-size:14px;color:#5A6577">{{ptSummary}}</p>
+</div>
+</div>
+</header>
+
+<!-- Left: matter navigation -->
+<nav aria-label="Matter" class="ovside">
+<div style="background:#fff;border:1px solid #E3E8EF;border-radius:14px;padding:6px">
+<div style="border-bottom:1px solid #EEF1F5;margin-bottom:6px;padding-bottom:6px;position:relative" class="navli">
+<button onClick="{{navToggle}}" aria-expanded="{{navExp}}" aria-label="{{navBtnLabel}}" class="ovnav ovcollapse" style="justify-content:{{navJustify}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;transform:{{navRot}}"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"></path></svg><sc-if value="{{navWide}}" hint-placeholder-val="{{true}}"><span>Collapse menu</span></sc-if></button>
+<sc-if value="{{navCollapsed}}" hint-placeholder-val="{{false}}"><span class="navtip" role="tooltip">{{navBtnLabel}}</span></sc-if>
+</div>
+<ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{ovNav}}" as="n" hint-placeholder-count="11">
+<li class="navli"><a href="{{n.href}}" class="ovnav" aria-current="{{n.cur}}" aria-label="{{n.aria}}" style="background:{{n.bg}};color:{{n.fg}};font-weight:{{n.fw}};justify-content:{{navJustify}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="{{n.icon}}"></path></svg><sc-if value="{{navWide}}" hint-placeholder-val="{{true}}"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{n.label}}</span></sc-if></a><sc-if value="{{n.hasAdd}}" hint-placeholder-val="{{false}}"><button onClick="{{n.add}}" aria-haspopup="dialog" aria-label="{{n.addLabel}}" title="{{n.addLabel}}" class="navplus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button></sc-if><sc-if value="{{navCollapsed}}" hint-placeholder-val="{{false}}"><span class="navtip" role="tooltip">{{n.label}}</span></sc-if></li>
+</sc-for>
+</ul>
+</div>
+</nav>
+
+<!-- Centre -->
+<div style="min-width:0;display:flex;flex-direction:column;gap:14px">
+<section aria-labelledby="pt-people" class="igcard">
+<div class="ighead" style="background:{{ptAcc.people.hbg}};border-bottom-color:{{ptAcc.people.hbd}}"><h2 id="pt-people" style="margin:0;flex:1;min-width:0"><button type="button" onClick="{{ptAcc.people.toggle}}" aria-expanded="{{ptAcc.people.exp}}" class="igacc"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" aria-hidden="true" style="flex:none;transition:transform .15s;transform:{{ptAcc.people.rot}}"><path d="M9 6l6 6-6 6"></path></svg><span style="flex:1;min-width:0">Participants</span><span style="font-size:12px;font-weight:600;border-radius:999px;padding:2px 9px;background:#F1F4F8;color:#5A6577">{{ptAcc.people.badge}}</span></button></h2></div>
+<sc-if value="{{ptAcc.people.open}}" hint-placeholder-val="{{true}}">
+<div class="igbody">
+<ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ptPeople}}" as="p" hint-placeholder-count="2">
+<li class="ptperson">
+<span aria-hidden="true" style="width:40px;height:40px;flex:none;border-radius:10px;background:#E6EEF8;color:#14335C;display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0116 0"></path></svg></span>
+<div style="flex:1;min-width:0">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><span style="font-size:16px;font-weight:700;color:#172234">{{p.name}}</span><span style="font-size:12px;font-weight:600;border-radius:999px;padding:2px 9px;background:#F1F4F8;color:#3A4657">{{p.type}}</span><span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;background:{{p.stBg}};color:{{p.stFg}}"><span aria-hidden="true" style="width:6px;height:6px;border-radius:50%;background:{{p.stDot}}"></span>{{p.status}}</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:4px 20px;margin-top:6px;font-size:14px">
+<span style="display:inline-flex;align-items:center;gap:6px;color:#5A6577;min-width:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M3 5h18v14H3zM3 7l9 6 9-6"></path></svg><sc-if value="{{p.email}}" hint-placeholder-val="{{true}}"><a href="mailto:{{p.email}}" style="overflow-wrap:anywhere">{{p.email}}</a></sc-if><sc-if value="{{p.noEmail}}" hint-placeholder-val="{{false}}"><span style="color:#7A8699">Email not set</span></sc-if></span>
+<span style="display:inline-flex;align-items:center;gap:6px;color:#5A6577"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"></path></svg><sc-if value="{{p.phone}}" hint-placeholder-val="{{true}}"><a href="tel:{{p.phone}}" style="font-variant-numeric:tabular-nums">{{p.phone}}</a></sc-if><sc-if value="{{p.noPhone}}" hint-placeholder-val="{{false}}"><span style="color:#7A8699">Phone not set</span></sc-if></span>
+</div>
+<sc-if value="{{p.invitedOn}}" hint-placeholder-val="{{false}}"><p style="margin:6px 0 0;font-size:12px;color:#5A6577">Invited {{p.invitedOn}}</p></sc-if>
+</div>
+<div style="display:flex;align-items:center;gap:8px;flex:none">
+<button onClick="{{p.invite}}" disabled="{{p.cantInvite}}" title="{{p.inviteTip}}" class="{{p.invCls}}" style="opacity:{{p.invOp}};cursor:{{p.invCur}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20l18-8L3 4v6l12 2-12 2z"></path></svg>{{p.inviteLabel}}</button>
+<span class="tipwrap"><button onClick="{{p.remove}}" aria-label="Delete {{p.name}}" class="iconbtn dyib" style="background:transparent"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button><span class="btntip btntip-r" role="tooltip">Delete</span></span>
+</div>
+</li>
+</sc-for>
+</ul>
+<sc-if value="{{ptNoPeople}}" hint-placeholder-val="{{false}}"><div class="fnempty" style="padding:14px;border:1px dashed #D5DCE6;border-radius:10px;text-align:center;font-size:14px;color:#5A6577">No participants on Pathway to settlement.</div></sc-if>
+</div>
+</sc-if>
+</section>
+<section aria-labelledby="pt-funds" class="igcard">
+<div class="ighead" style="background:{{ptAcc.funds.hbg}};border-bottom-color:{{ptAcc.funds.hbd}}"><h2 id="pt-funds" style="margin:0;flex:1;min-width:0"><button type="button" onClick="{{ptAcc.funds.toggle}}" aria-expanded="{{ptAcc.funds.exp}}" class="igacc"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" aria-hidden="true" style="flex:none;transition:transform .15s;transform:{{ptAcc.funds.rot}}"><path d="M9 6l6 6-6 6"></path></svg><span style="flex:1;min-width:0">Requested funds for settlement</span><span style="font-size:12px;font-weight:600;border-radius:999px;padding:2px 9px;background:#F1F4F8;color:#5A6577">{{ptAcc.funds.badge}}</span></button></h2></div>
+<sc-if value="{{ptAcc.funds.open}}" hint-placeholder-val="{{true}}">
+<div class="igbody">
+<div style="overflow-x:auto;border:1px solid #E3E8EF;border-radius:10px"><table class="igtable"><thead><tr><th>Name</th><th style="text-align:right">Amount</th><th>Description</th><th>Reference</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+<tbody><tr><td colspan="7" style="padding:28px 16px;text-align:center"><span aria-hidden="true" style="display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;background:#F1F4F8;color:#5A6577;margin-bottom:8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M16 7.5c-.6-1.2-2-2-4-2-2.2 0-4 1.1-4 2.8 0 4 8 2 8 6 0 1.7-1.8 2.8-4 2.8-2 0-3.5-.8-4.1-2.1"></path></svg></span><span style="display:block;font-weight:600;color:#172234">No funds requested yet</span><span style="display:block;font-size:14px;color:#5A6577">Requests from participants for settlement funds will appear here.</span></td></tr></tbody></table></div>
+</div>
+</sc-if>
+</section>
+<section aria-labelledby="pt-bank" class="igcard">
+<div class="ighead" style="background:{{ptAcc.bank.hbg}};border-bottom-color:{{ptAcc.bank.hbd}}"><h2 id="pt-bank" style="margin:0;flex:1;min-width:0"><button type="button" onClick="{{ptAcc.bank.toggle}}" aria-expanded="{{ptAcc.bank.exp}}" class="igacc"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" aria-hidden="true" style="flex:none;transition:transform .15s;transform:{{ptAcc.bank.rot}}"><path d="M9 6l6 6-6 6"></path></svg><span style="flex:1;min-width:0">Requested bank account details</span><span style="font-size:12px;font-weight:600;border-radius:999px;padding:2px 9px;background:#F1F4F8;color:#5A6577">{{ptAcc.bank.badge}}</span></button></h2></div>
+<sc-if value="{{ptAcc.bank.open}}" hint-placeholder-val="{{true}}">
+<div class="igbody">
+<div style="overflow-x:auto;border:1px solid #E3E8EF;border-radius:10px"><table class="igtable"><thead><tr><th>Name</th><th>Description</th><th>Date</th></tr></thead>
+<tbody><tr><td colspan="3" style="padding:28px 16px;text-align:center"><span aria-hidden="true" style="display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;background:#F1F4F8;color:#5A6577;margin-bottom:8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18"></path></svg></span><span style="display:block;font-weight:600;color:#172234">No bank details requested yet</span><span style="display:block;font-size:14px;color:#5A6577">Requests for bank account details will appear here.</span></td></tr></tbody></table></div>
+</div>
+</sc-if>
+</section>
+</div>
+
+<!-- Right panel: Matter details -->
+<aside aria-label="Matter details" class="ovright">
+<section aria-labelledby="md" class="mdcard" style="background:#fff;border:1px solid #E3E8EF;border-radius:14px;overflow:hidden">
+<div style="display:flex;align-items:center;gap:8px;padding:16px 18px;background:#F7F9FC">
+<h2 id="md" style="margin:0;font-size:19px;font-weight:700;color:#14335C;display:flex;align-items:center;gap:10px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14335C" stroke-width="2" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg><span>Matter details</span></h2>
+</div>
+<div class="mdscroll" tabindex="0" aria-label="Matter details sections">
+<sc-for list="{{mdSecs}}" as="s" hint-placeholder-count="6">
+<section style="border-top:1px solid #E3E8EF">
+<h3 style="margin:0"><button class="mdacc" onClick="{{s.toggle}}" aria-expanded="{{s.exp}}" style="width:100%;border:0;background:transparent;display:flex;align-items:center;gap:10px;padding:14px 18px;text-align:left;font-size:16px;font-weight:700;color:#172234">
+<span style="flex:1">{{s.title}}</span><span style="font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;background:{{s.chipBg}};color:{{s.chipFg}};white-space:nowrap">{{s.chip}}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" aria-hidden="true" style="flex:none;transition:transform .15s;transform:{{s.rot}}"><path d="M6 9l6 6 6-6"></path></svg></button></h3>
+<sc-if value="{{s.open}}" hint-placeholder-val="{{false}}">
+<sc-if value="{{s.hasRows}}" hint-placeholder-val="{{true}}">
+<dl style="margin:0;padding:0 18px">
+<sc-for list="{{s.rows}}" as="r" hint-placeholder-count="3">
+<div class="mdrow" style="display:grid;grid-template-columns:130px minmax(0,1fr) 32px;gap:8px;align-items:center;padding:6px 0;border-top:1px solid #EEF1F5;min-height:32px">
+<dt style="font-size:13px;color:#5A6577">{{r.label}}</dt>
+<dd style="margin:0;font-weight:600;color:{{r.color}};overflow-wrap:anywhere;display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-variant-numeric:tabular-nums">{{r.value}}<sc-if value="{{r.chip}}" hint-placeholder-val="{{false}}"><span style="font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;background:{{r.chipBg}};color:{{r.chipFg}}">{{r.chip}}</span></sc-if></dd>
+<span><sc-if value="{{r.copyable}}" hint-placeholder-val="{{true}}"><button onClick="{{r.doCopy}}" class="mdcopy" aria-label="Copy {{r.label}}" title="{{r.copyTitle}}" style="width:32px;height:32px;border:0;background:transparent;border-radius:8px;display:grid;place-items:center;color:{{r.copyColor}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.copyIcon}}"></path></svg></button></sc-if></span>
+</div>
+</sc-for>
+</dl>
+</sc-if>
+<sc-if value="{{s.isParties}}" hint-placeholder-val="{{false}}">
+<sc-for list="{{s.contacts}}" as="c" hint-placeholder-count="2">
+<article style="margin:0 18px;padding:14px 0;border-top:1px solid #EEF1F5;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+<span style="font-size:12px;font-weight:700;letter-spacing:.06em;color:#5A6577;text-transform:uppercase">{{c.role}}</span>
+<sc-if value="{{c.rep}}" hint-placeholder-val="{{false}}"><span style="font-size:11px;font-weight:700;letter-spacing:.04em;border-radius:999px;padding:1px 8px;background:#E6EEF8;color:#14335C">REPRESENTING</span></sc-if>
+</div>
+<div style="display:flex;align-items:center;gap:10px">
+<span aria-hidden="true" style="width:36px;height:36px;border-radius:50%;background:#E6EBF2;color:#14335C;display:grid;place-items:center;font-weight:700;font-size:13px;flex:none">{{c.initials}}</span>
+<span style="min-width:0"><span style="display:block;font-weight:700">{{c.name}} <span style="font-weight:400;color:#5A6577">{{c.nick}}</span></span><span style="display:block;font-size:13px;color:#5A6577">{{c.company}}</span></span>
+</div>
+<dl style="margin:0;padding-left:46px;display:grid;grid-template-columns:52px minmax(0,1fr);gap:5px 10px;font-size:14px;align-items:center">
+<dt style="font-size:12px;color:#5A6577">Email</dt>
+<dd style="margin:0;min-width:0"><sc-if value="{{c.email}}" hint-placeholder-val="{{true}}"><a href="#" style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="{{c.email}}">{{c.email}}</a></sc-if><sc-if value="{{c.noEmail}}" hint-placeholder-val="{{false}}"><span style="color:#5A6577">Not set</span></sc-if></dd>
+<dt style="font-size:12px;color:#5A6577">Phone</dt>
+<dd style="margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px"><sc-if value="{{c.phone}}" hint-placeholder-val="{{true}}"><a href="{{c.tel}}" style="font-variant-numeric:tabular-nums">{{c.phone}}</a></sc-if><sc-if value="{{c.noPhone}}" hint-placeholder-val="{{false}}"><span style="color:#5A6577">Not set</span></sc-if><sc-if value="{{c.phoneFlag}}" hint-placeholder-val="{{false}}"><span style="background:#FFF7E0;color:#7A4F00;font-size:12px;font-weight:600;border-radius:6px;padding:1px 7px">{{c.phoneFlag}}</span></sc-if></dd>
+<sc-for list="{{c.extra}}" as="x" hint-placeholder-count="1">
+<dt style="font-size:12px;color:#5A6577">{{x.label}}</dt>
+<dd style="margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px"><sc-if value="{{x.value}}" hint-placeholder-val="{{true}}"><span style="font-weight:600;color:{{x.color}};font-variant-numeric:tabular-nums">{{x.value}}</span></sc-if><sc-if value="{{x.chip}}" hint-placeholder-val="{{false}}"><span style="font-size:12px;font-weight:700;border-radius:999px;padding:1px 8px;background:{{x.chipBg}};color:{{x.chipFg}}">{{x.chip}}</span></sc-if></dd>
+</sc-for>
+</dl>
+<div style="display:flex;flex-wrap:wrap;gap:6px;padding-left:46px;margin-top:2px">
+<sc-if value="{{c.phone}}" hint-placeholder-val="{{true}}"><a href="{{c.tel}}" aria-label="Call {{c.name}}" style="box-sizing:border-box;line-height:1;display:inline-flex;align-items:center;gap:5px;border:1px solid #C9D4E3;background:#fff;color:#14335C;border-radius:8px;height:30px;padding:0 10px;font-size:13px;font-weight:600;text-decoration:none"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#14335C" stroke-width="2.2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"></path></svg>Call</a></sc-if>
+<sc-if value="{{c.email}}" hint-placeholder-val="{{true}}"><button aria-label="Email {{c.name}}" style="display:inline-flex;align-items:center;gap:5px;border:1px solid #C9D4E3;background:#fff;color:#14335C;border-radius:8px;height:30px;padding:0 10px;font-size:13px;font-weight:600"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#14335C" stroke-width="2.2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>Email</button></sc-if>
+<button onClick="{{c.copyAll}}" aria-label="Copy all details for {{c.name}}" style="display:inline-flex;align-items:center;gap:5px;border:1px solid {{c.copyBorder}};background:{{c.copyBg}};color:{{c.copyFg}};border-radius:8px;height:30px;padding:0 10px;font-size:13px;font-weight:600"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="{{c.copyIcon}}"></path></svg>{{c.copyLabel}}</button>
+</div>
+</article>
+</sc-for>
+<dl style="margin:0;padding:0 18px">
+<sc-for list="{{s.tailRows}}" as="r" hint-placeholder-count="3">
+<div class="mdrow" style="display:grid;grid-template-columns:130px minmax(0,1fr) 32px;gap:8px;align-items:center;padding:6px 0;border-top:1px solid #EEF1F5;min-height:32px">
+<dt style="font-size:13px;color:#5A6577">{{r.label}}</dt>
+<dd style="margin:0;font-weight:600;color:{{r.color}};overflow-wrap:anywhere;display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-variant-numeric:tabular-nums">{{r.value}}<sc-if value="{{r.chip}}" hint-placeholder-val="{{false}}"><span style="font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;background:{{r.chipBg}};color:{{r.chipFg}}">{{r.chip}}</span></sc-if></dd>
+<span><sc-if value="{{r.copyable}}" hint-placeholder-val="{{true}}"><button onClick="{{r.doCopy}}" class="mdcopy" aria-label="Copy {{r.label}}" title="{{r.copyTitle}}" style="width:32px;height:32px;border:0;background:transparent;border-radius:8px;display:grid;place-items:center;color:{{r.copyColor}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.copyIcon}}"></path></svg></button></sc-if></span>
+</div>
+</sc-for>
+</dl>
+</sc-if>
+<div style="height:10px"></div>
+</sc-if>
+</section>
+</sc-for>
+</div>
+</section>
+</aside>
+</main>
+
+
+<!-- Notes -->
+<sc-if value="{{ntOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{ntClose}}" style="position:fixed;inset:0;z-index:70;background:rgba(23,34,52,.35);display:flex;justify-content:center;align-items:flex-start;padding:12vh 16px 16px">
+<div role="dialog" aria-modal="true" aria-labelledby="nt-h" onClick="{{ntStop}}" onKeyDown="{{ntKey}}" style="width:100%;max-width:640px;background:#fff;border:1px solid #E3E8EF;border-radius:14px;box-shadow:0 24px 60px rgba(20,51,92,.22);overflow:hidden">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 14px 14px 20px;border-bottom:1px solid #E3E8EF">
+<div style="min-width:0"><h2 id="nt-h" style="margin:0;font-size:17px;font-weight:700">Notes</h2><p style="margin:2px 0 0;font-size:13px;color:#5A6577;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ntName}}</p></div>
+<button onClick="{{ntClose}}" aria-label="Close" style="width:34px;height:34px;flex:none;border:0;background:transparent;border-radius:8px;display:grid;place-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div style="padding:16px 20px;display:flex;flex-direction:column;gap:10px;max-height:50vh;overflow-y:auto">
+<sc-for list="{{ntList}}" as="nn" hint-placeholder-count="1">
+<div style="display:flex;align-items:center;gap:10px">
+<label for="{{nn.id}}" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Note {{nn.num}}</label>
+<input id="{{nn.id}}" class="ntinp" type="text" value="{{nn.value}}" onInput="{{nn.change}}" placeholder="Write a note">
+<button onClick="{{nn.remove}}" aria-label="Delete note {{nn.num}}" style="width:42px;height:42px;flex:none;border:1px solid #D5DCE6;background:#fff;border-radius:10px;display:grid;place-items:center;color:#3A4657"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button>
+</div>
+</sc-for>
+<sc-if value="{{ntEmpty}}" hint-placeholder-val="{{false}}"><p style="margin:0;font-size:14px;color:#5A6577">No notes yet.</p></sc-if>
+<div><button onClick="{{ntAdd}}" style="display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;height:34px;padding:0 8px;border-radius:8px;font-size:14px;font-weight:600;color:#14335C"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add note</button></div>
+</div>
+<div style="display:flex;justify-content:flex-end;gap:10px;padding:12px 20px;border-top:1px solid #E3E8EF;background:#F9FAFC">
+<button onClick="{{ntClose}}" style="height:38px;padding:0 16px;border:1px solid #D5DCE6;background:#fff;border-radius:10px;font-size:14px;font-weight:600;color:#14335C">Cancel</button>
+<button onClick="{{ntSubmit}}" style="height:38px;padding:0 18px;border:0;background:#14335C;border-radius:10px;font-size:14px;font-weight:600;color:#fff">Submit</button>
+</div>
+</div>
+</div>
+</sc-if>
+
+<!-- Add diary item -->
+<sc-if value="{{diOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{diClose}}" style="position:fixed;inset:0;z-index:70;background:rgba(23,34,52,.35);display:flex;justify-content:center;align-items:flex-start;padding:10vh 16px 16px;overflow-y:auto">
+<div role="dialog" aria-modal="true" aria-labelledby="di-h" onClick="{{popStop}}" onKeyDown="{{diKey}}" style="width:100%;max-width:640px;background:#fff;border:1px solid #E3E8EF;border-radius:14px;box-shadow:0 24px 60px rgba(20,51,92,.22);overflow:hidden">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 14px 14px 20px;border-bottom:1px solid #E3E8EF">
+<h2 id="di-h" style="margin:0;font-size:17px;font-weight:700">{{diTitle}}</h2>
+<button onClick="{{diClose}}" aria-label="Close" style="width:34px;height:34px;border:0;background:transparent;border-radius:8px;display:grid;place-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div style="padding:18px 20px;display:flex;flex-direction:column;gap:16px">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+<div><label for="di-due" style="display:block;font-size:14px;font-weight:600;color:#172234;margin-bottom:6px">Due date<span aria-hidden="true" style="color:#B42318"> *</span></label><input id="di-due" type="date" required="required" value="{{diDue}}" onInput="{{diDueChange}}" style="display:block;width:100%;box-sizing:border-box;height:42px;border:1px solid {{diDueB}};border-radius:10px;padding:0 12px;font:inherit;font-size:15px;color:#172234;background:#fff"><sc-if value="{{diDueErr}}" hint-placeholder-val="{{false}}"><span role="alert" style="display:block;margin-top:4px;font-size:13px;color:#B42318">Choose a due date.</span></sc-if><span style="display:block;margin-top:4px;font-size:13px;color:#5A6577">Matter reference: 00334</span></div>
+<div><label for="di-asg" style="display:block;font-size:14px;font-weight:600;color:#172234;margin-bottom:6px">Assigned to</label><span class="thdd" onKeyDown="{{ddDiAsg.key}}" style="position:relative;display:block"><button type="button" id="di-asg" onClick="{{ddDiAsg.toggle}}" aria-haspopup="listbox" aria-expanded="{{ddDiAsg.exp}}" class="thsel" style="width:100%;height:42px;border-color:{{ddDiAsg.bd}};font-size:15px;font-weight:500"><span class="thsel-l" style="color:{{ddDiAsg.lc}}">{{ddDiAsg.label}}</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;transition:transform .15s;transform:{{ddDiAsg.rot}}"><path d="M6 9l6 6 6-6"></path></svg></button><sc-if value="{{ddDiAsg.open}}" hint-placeholder-val="{{false}}"><span onClick="{{ddDiAsg.close}}" aria-hidden="true" style="position:fixed;inset:0;z-index:199"></span><ul role="listbox" class="thlist2" style="top:{{ddDiAsg.lt}};bottom:{{ddDiAsg.lb}};left:{{ddDiAsg.ll}};width:{{ddDiAsg.lw}};max-height:{{ddDiAsg.lmh}}"><sc-for list="{{ddDiAsg.opts}}" as="ddo" hint-placeholder-count="3"><li role="option" aria-selected="{{ddo.sel}}"><button type="button" onClick="{{ddo.pick}}" class="thopt" style="background:{{ddo.bg}};font-weight:{{ddo.fw}};color:{{ddo.fg}}"><span style="flex:1">{{ddo.label}}</span><sc-if value="{{ddo.on}}" hint-placeholder-val="{{false}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#14335C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></button></li></sc-for></ul></sc-if></span></div>
+</div>
+<div><label for="di-desc" style="display:block;font-size:14px;font-weight:600;color:#172234;margin-bottom:6px">Description<span aria-hidden="true" style="color:#B42318"> *</span></label><input id="di-desc" type="text" required="required" value="{{diDesc}}" onInput="{{diDescChange}}" style="display:block;width:100%;box-sizing:border-box;height:42px;border:1px solid {{diDescB}};border-radius:10px;padding:0 12px;font:inherit;font-size:15px;color:#172234;background:#fff"><sc-if value="{{diDescErr}}" hint-placeholder-val="{{false}}"><span role="alert" style="display:block;margin-top:4px;font-size:13px;color:#B42318">Enter a description.</span></sc-if></div>
+<div><span style="display:block;font-size:14px;font-weight:600;color:#172234;margin-bottom:6px">Notes</span>
+<div style="background:#F7F9FC;border:1px solid #E3E8EF;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{diNotes}}" as="dn" hint-placeholder-count="0">
+<div style="display:flex;align-items:center;gap:10px"><label for="{{dn.id}}" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Note {{dn.num}}</label><input id="{{dn.id}}" class="ntinp" type="text" value="{{dn.value}}" onInput="{{dn.change}}" placeholder="Write a note"><button onClick="{{dn.remove}}" aria-label="Delete note {{dn.num}}" style="width:42px;height:42px;flex:none;border:1px solid #D5DCE6;background:#fff;border-radius:10px;display:grid;place-items:center;color:#3A4657"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button></div>
+</sc-for>
+<div><button onClick="{{diAddNote}}" style="display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;height:34px;padding:0 8px;border-radius:8px;font-size:14px;font-weight:600;color:#14335C"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add note</button></div>
+</div>
+</div>
+</div>
+<div style="display:flex;justify-content:flex-end;gap:10px;padding:12px 20px;border-top:1px solid #E3E8EF;background:#F9FAFC">
+<button onClick="{{diClose}}" style="height:38px;padding:0 16px;border:1px solid #D5DCE6;background:#fff;border-radius:10px;font-size:14px;font-weight:600;color:#14335C">Cancel</button>
+<button onClick="{{diSubmit}}" style="height:38px;padding:0 18px;border:0;background:#14335C;border-radius:10px;font-size:14px;font-weight:600;color:#fff">Submit</button>
+</div>
+</div>
+</div>
+</sc-if>
+<!-- Create note -->
+<sc-if value="{{cnOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{cnClose}}" style="position:fixed;inset:0;z-index:70;background:rgba(23,34,52,.35);display:flex;justify-content:center;align-items:flex-start;padding:10vh 16px 16px;overflow-y:auto">
+<div role="dialog" aria-modal="true" aria-labelledby="cn-h" onClick="{{popStop}}" onKeyDown="{{cnKey}}" style="width:100%;max-width:640px;background:#fff;border:1px solid #E3E8EF;border-radius:14px;box-shadow:0 24px 60px rgba(20,51,92,.22);overflow:hidden">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 14px 14px 20px;border-bottom:1px solid #E3E8EF">
+<h2 id="cn-h" style="margin:0;font-size:17px;font-weight:700">Create note</h2>
+<button onClick="{{cnClose}}" aria-label="Close" style="width:34px;height:34px;border:0;background:transparent;border-radius:8px;display:grid;place-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div style="padding:18px 20px;display:flex;flex-direction:column;gap:16px">
+<div><label for="cn-title" style="display:block;font-size:14px;font-weight:600;color:#172234;margin-bottom:6px">Title<span aria-hidden="true" style="color:#B42318"> *</span></label><input id="cn-title" type="text" required="required" value="{{cnTitle}}" onInput="{{cnTitleChange}}" style="display:block;width:100%;box-sizing:border-box;height:42px;border:1px solid {{cnTitleB}};border-radius:10px;padding:0 12px;font:inherit;font-size:15px;color:#172234;background:#fff"><sc-if value="{{cnTitleErr}}" hint-placeholder-val="{{false}}"><span role="alert" style="display:block;margin-top:4px;font-size:13px;color:#B42318">Enter a title.</span></sc-if></div>
+<div><label for="cn-detail" style="display:block;font-size:14px;font-weight:600;color:#172234;margin-bottom:6px">Detail<span aria-hidden="true" style="color:#B42318"> *</span></label><textarea id="cn-detail" required="required" rows="5" value="{{cnDetail}}" onInput="{{cnDetailChange}}" style="display:block;width:100%;box-sizing:border-box;min-height:120px;border:1px solid {{cnDetailB}};border-radius:10px;padding:10px 12px;font:inherit;font-size:15px;color:#172234;background:#fff;resize:vertical"></textarea><sc-if value="{{cnDetailErr}}" hint-placeholder-val="{{false}}"><span role="alert" style="display:block;margin-top:4px;font-size:13px;color:#B42318">Enter the note detail.</span></sc-if></div>
+<label for="cn-alert" style="display:flex;align-items:center;gap:10px;font-size:15px;color:#172234;cursor:pointer;width:max-content"><input id="cn-alert" type="checkbox" checked="{{cnAlert}}" onChange="{{cnAlertChange}}" style="width:18px;height:18px;margin:0;accent-color:#14335C">This is an ‘Alert’ note</label>
+</div>
+<div style="display:flex;justify-content:flex-end;gap:10px;padding:12px 20px;border-top:1px solid #E3E8EF;background:#F9FAFC">
+<button onClick="{{cnClose}}" style="height:38px;padding:0 16px;border:1px solid #D5DCE6;background:#fff;border-radius:10px;font-size:14px;font-weight:600;color:#14335C">Cancel</button>
+<button onClick="{{cnSubmit}}" style="height:38px;padding:0 18px;border:0;background:#14335C;border-radius:10px;font-size:14px;font-weight:600;color:#fff">Create</button>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{toast}}" hint-placeholder-val="{{false}}"><div role="status" style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:80;display:flex;align-items:center;gap:8px;background:#172234;color:#fff;font-size:14px;font-weight:600;padding:10px 16px;border-radius:10px;box-shadow:0 12px 32px rgba(20,51,92,.3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7BD7A3" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{toast}}</div></sc-if>
+
+<!-- Recent matters viewed -->
+<sc-if value="{{rOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{rClose}}" style="position:fixed;inset:0;z-index:60;background:rgba(23,34,52,.35);display:flex;justify-content:center;align-items:flex-start;padding:10vh 16px 16px">
+<div role="dialog" aria-modal="true" aria-labelledby="rmv-h" onClick="{{sStop}}" style="width:100%;max-width:1160px;background:#fff;border:1px solid #E3E8EF;border-radius:14px;box-shadow:0 24px 60px rgba(20,51,92,.22);overflow:hidden">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;padding:14px 14px 14px 20px;border-bottom:1px solid #E3E8EF">
+<h2 id="rmv-h" style="margin:0;display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;color:#172234"><span aria-hidden="true" style="width:32px;height:32px;border-radius:8px;background:#EEF2F7;display:grid;place-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#14335C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 103-6.7L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l3 2"></path></svg></span>Recent matters viewed</h2>
+<button autofocus="autofocus" onClick="{{rClose}}" aria-label="Close" style="width:34px;height:34px;border:0;background:transparent;border-radius:8px;display:grid;place-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A4657" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div style="overflow-x:auto;max-height:70vh">
+<table style="width:100%;border-collapse:collapse;font-size:14px;color:#172234;min-width:900px">
+<thead><tr class="rmvhead" style="background:#F7F9FC;text-align:left">
+<th style="padding:10px 16px;font-weight:600">Reference</th><th style="padding:10px 12px;font-weight:600">Status</th><th style="padding:10px 12px;font-weight:600">Property address</th><th style="padding:10px 12px;font-weight:600">Representing</th><th style="padding:10px 12px;font-weight:600">Matter type</th><th style="padding:10px 16px 10px 12px;font-weight:600">Acting for</th>
+</tr></thead>
+<tbody>
+<sc-for list="{{recent}}" as="r" hint-placeholder-count="7">
+<tr class="rmvrow" style="border-top:1px solid #EEF1F5">
+<td style="padding:12px 16px"><a href="{{r.href}}" style="font-weight:600">{{r.ref}}</a></td>
+<td style="padding:12px"><span style="display:flex;align-items:center;gap:8px"><span style="background:{{r.bg}};color:{{r.fg}};font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap">{{r.status}}</span><sc-if value="{{r.when}}" hint-placeholder-val="{{false}}"><span style="font-size:12px;color:#5A6577;line-height:1.3">{{r.date}}<br>{{r.time}}</span></sc-if></span></td>
+<td style="padding:12px">{{r.addr}}</td>
+<td style="padding:12px">{{r.rep}}</td>
+<td style="padding:12px">{{r.type}}</td>
+<td style="padding:12px 16px 12px 12px">{{r.acting}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</sc-if>
+
+<!-- Global search -->
+<sc-if value="{{sOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{sClose}}" style="position:fixed;inset:0;z-index:60;background:rgba(23,34,52,.35);display:flex;justify-content:center;align-items:flex-start;padding:12vh 16px 16px">
+<div role="dialog" aria-modal="true" aria-label="Search" onClick="{{sStop}}" style="width:100%;max-width:600px;background:#fff;border-radius:14px;box-shadow:0 24px 60px rgba(20,51,92,.28);overflow:hidden;font-family:'Source Sans 3',ui-sans-serif,system-ui,sans-serif">
+<div style="display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid #E3E8EF">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5A6577" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+<input id="gsearch-input" autofocus="autofocus" type="text" value="{{sq}}" onInput="{{sInput}}" onKeyDown="{{sKey}}" placeholder="Search matters, addresses, contacts" role="combobox" aria-expanded="true" aria-controls="gsearch-list" aria-activedescendant="{{sActiveId}}" aria-label="Search" style="flex:1;min-width:0;border:0;outline:none;height:56px;font:inherit;font-size:17px;color:#172234;background:transparent">
+<kbd style="font-family:inherit;font-size:12px;color:#5A6577;border:1px solid #D5DCE6;border-radius:5px;padding:1px 6px">Esc</kbd>
+</div>
+<div id="gsearch-list" role="listbox" style="max-height:380px;overflow:auto;padding:6px 6px 8px">
+<sc-for list="{{sGroups}}" as="g" hint-placeholder-count="2">
+<p style="margin:8px 10px 4px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#5A6577">{{g.label}}</p>
+<sc-for list="{{g.items}}" as="it" hint-placeholder-count="3">
+<a id="{{it.id}}" role="option" aria-selected="{{it.sel}}" href="{{it.href}}" onMouseEnter="{{it.hover}}" style="display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:9px;background:{{it.bg}};color:#172234;text-decoration:none">
+<span aria-hidden="true" style="width:32px;height:32px;border-radius:8px;background:{{it.iconBg}};display:grid;place-items:center;flex:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{it.iconFg}}" stroke-width="2.2"><path d="{{it.icon}}"></path></svg></span>
+<span style="flex:1;min-width:0"><span style="display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{it.title}}</span><span style="display:block;font-size:13px;color:#5A6577;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{it.sub}}</span></span>
+<sc-if value="{{it.sel}}" hint-placeholder-val="{{false}}"><kbd style="font-family:inherit;font-size:12px;color:#14335C;border:1px solid #C9D4E3;border-radius:5px;padding:1px 6px;background:#fff">↵</kbd></sc-if>
+</a>
+</sc-for>
+</sc-for>
+<sc-if value="{{sNone}}" hint-placeholder-val="{{false}}"><p style="margin:0;padding:28px 12px;text-align:center;color:#5A6577">No matters or contacts match “{{sq}}”.</p></sc-if>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:6px 16px;padding:10px 16px;border-top:1px solid #E3E8EF;background:#F7F9FC;font-size:12px;color:#5A6577">
+<span>↑ ↓ to move</span><span>↵ to open</span><span>Esc to close</span><span style="margin-left:auto">Open anytime with Ctrl K or /</span>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+
+function rcSearchVals(c) {
+  if (!c._sk) {
+    c._sk = true;
+    window.addEventListener('keydown', (e) => {
+      const t = e.target, typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable);
+      if ((e.key === 'k' || e.key === 'K') && (e.ctrlKey || e.metaKey)) { e.preventDefault(); c._sOpen(); }
+      else if (e.key === '/' && !typing) { e.preventDefault(); c._sOpen(); }
+    });
+    c._sOpen = () => { c.setState({ sOpen: true, sq: '', sIdx: 0 }); setTimeout(() => { const el = document.getElementById('gsearch-input'); if (el) el.focus(); }, 30); };
+  }
+  const st = c.state || {};
+  const q = (st.sq || '').trim().toLowerCase();
+  const M = 'M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z';
+  const P = 'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-4 4-6 8-6s8 2 8 6';
+  const matters = [
+    ['00003', '3 Overland Road, Croydon Park SA 5008', 'Lenkov → Kellog · Overdue', 'matter-overview.html'],
+    ['00008', '21 Rundle Street, Kent Town SA 5067', 'Proprietor on title · Overdue', '#'],
+    ['00010', '6 Beach Road, Christies Beach SA 5165', 'Both parties · Overdue', '#'],
+    ['00012', '14 Prospect Road, Prospect SA 5082', 'Both parties · Settles 23 Oct 2026', 'matter-overview.html'],
+    ['00015', '7 Hill Street, Glenelg SA 5045', 'Proprietor on title · Settles 28 Oct 2026', 'matter-overview.html'],
+    ['00026', '9 Unley Road, Unley SA 5061', 'Both parties · Settles 8 Jan 2027', 'matter-overview.html']
+  ];
+  const people = [
+    ['Juin Ivan Lenkov “John”', 'Vendor · 00003 Croydon Park'],
+    ['Michael Kellog “Mick”', 'Purchaser · 00003 Croydon Park'],
+    ['Juin agent Testing', 'Vendor’s agent · Juin Real Estate · 00003'],
+    ['Anna · Fayesbook', 'Purchaser’s agent · 00003'],
+    ['Juin Broker Inc', 'Broker · 00003']
+  ];
+  let groups;
+  if (!q) {
+    groups = [{ label: 'Recently opened', items: matters.slice(0, 3).map(m => ({ title: m[0] + ' · ' + m[1], sub: m[2], href: m[3], icon: M, iconBg: '#E6EEF8', iconFg: '#14335C' })) }];
+  } else {
+    const mm = matters.filter(m => (m[0] + ' ' + m[1] + ' ' + m[2]).toLowerCase().includes(q)).map(m => ({ title: m[0] + ' · ' + m[1], sub: m[2], href: m[3], icon: M, iconBg: '#E6EEF8', iconFg: '#14335C' }));
+    const pp = people.filter(p => (p[0] + ' ' + p[1]).toLowerCase().includes(q)).map(p => ({ title: p[0], sub: p[1], href: 'matter-overview.html', icon: P, iconBg: '#F1F4F8', iconFg: '#3A4657' }));
+    groups = [];
+    if (mm.length) groups.push({ label: 'Matters & addresses', items: mm });
+    if (pp.length) groups.push({ label: 'Contacts', items: pp });
+  }
+  const flat = [];
+  groups.forEach(g => g.items.forEach(it => flat.push(it)));
+  const n = flat.length;
+  const idx = n ? Math.min(st.sIdx || 0, n - 1) : -1;
+  flat.forEach((it, i) => {
+    it.id = 'gs-opt-' + i; it.sel = i === idx ? 'true' : false; it.bg = i === idx ? '#EEF2F7' : 'transparent';
+    it.hover = () => { if ((c.state.sIdx || 0) !== i) c.setState({ sIdx: i }); };
+  });
+  return {
+    sOpen: !!st.sOpen, sq: st.sq || '', sGroups: groups, sNone: !!q && n === 0, sActiveId: idx >= 0 ? 'gs-opt-' + idx : '',
+    sOpenFn: () => c._sOpen(),
+    sClose: () => c.setState({ sOpen: false }),
+    sStop: (e) => e.stopPropagation(),
+    sInput: (e) => c.setState({ sq: e.target.value, sIdx: 0 }),
+    sKey: (e) => {
+      if (e.key === 'ArrowDown') { e.preventDefault(); if (n) c.setState({ sIdx: (idx + 1) % n }); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); if (n) c.setState({ sIdx: (idx - 1 + n) % n }); }
+      else if (e.key === 'Enter') { e.preventDefault(); const el = document.getElementById('gs-opt-' + idx); if (el) el.click(); }
+      else if (e.key === 'Escape') { e.preventDefault(); c.setState({ sOpen: false }); }
+    }
+  };
+}
+function rcHeaderVals(c) {
+  if (!c._hk) {
+    c._hk = true;
+    window.addEventListener('scroll', (e) => { if (e.target && e.target.closest && e.target.closest('[role=listbox]')) return; if (c.state.cuOpen) c.setState({ cuOpen: false }); }, true);
+    window.addEventListener('resize', () => { if (c.state.cuOpen) c.setState({ cuOpen: false }); });
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && (c.state.aOpen || c.state.rOpen || c.state.oOpen || c.state.cuOpen)) c.setState({ aOpen: false, rOpen: false, oOpen: false, cuOpen: false }); });
+  }
+  const st = c.state || {};
+  const apps = [['cal','End date calculator'],['dollar','GST calculator'],['dollarf','Penalty calculator'],['send','Retrieve PEXA invitations'],['search','PEXA subscriber search'],['dollar','Stamp duty calculator']]
+    .map(([k, label]) => ({ label, cal: k === 'cal', dollar: k === 'dollar', dollarf: k === 'dollarf', send: k === 'send', search: k === 'search' }));
+  const S = { 'In progress': ['#E6EEF8','#14335C'], 'Cancelled': ['#F1F4F8','#5A6577'], 'Unassigned': ['#FEF0C7','#93370D'], 'Lodged': ['#FCEAF2','#A3335F'] };
+  const recent = [
+    ['00003','In progress','','','3 Overland Road Croydon Park SA 5008','Juin Ivan Lenkov','Contract of Sale','Both'],
+    ['00003','In progress','','','3 Overland Road Croydon Park SA 5008','Michael Kellog','Contract of Sale','Both'],
+    ['00109','In progress','','','4000 Yorke Highway Dowlingville SA 5571','Nishy SA Properties**','Contract of Sale','Proprietor on Title'],
+    ['00169','Cancelled','21/10/2026','03:16 PM','5 Almond Circuit Munno Para West SA 5115','Thilina Harsha','Contract of Sale','Proprietor on Title'],
+    ['00008','Unassigned','','','6 Leicester Street Carlton VIC 3053','Renee Thomas','Contract of Sale','Proprietor on Title'],
+    ['00032','Lodged','30/01/2026','04:52 PM','20 January Street Adelaide SA 5000','Cassie SA Green','Application','Both'],
+    ['00032','Lodged','30/01/2026','04:52 PM','20 January Street Adelaide SA 5000','Budy SA Smith','Application','Both']
+  ].map(([ref,status,date,time,addr,rep,type,acting]) => ({ ref, status, date, time, when: !!date, addr, rep, type, acting,
+    bg: S[status][0], fg: S[status][1], href: ref === '00003' ? 'matter-overview.html' : '#' }));
+  return {
+    apps, recent,
+    ...(() => {
+      const stItems = [
+        { ref: '00334', addr: '56 Thomas Street West Perth WA 6005 Australia', acting: 'Proprietor on Title', party: 'Nishy perth properties', type: 'Contract of Sale', status: 'Settled', href: 'matter-overview.html' },
+        { ref: '00341', addr: '12 Rundle Street Kent Town SA 5067 Australia', acting: 'Both', party: 'Cassie SA Green', type: 'Contract of Sale', status: 'Completed', href: 'matter-overview.html' }
+      ];
+      return { stItems, stCount: stItems.length, stEmpty: stItems.length === 0 };
+    })(),
+    ...(() => {
+      const sel = st.cuSel || 'Next 28 days';
+      const opts = [['Next 7 days'],['Next 14 days'],['Next 21 days'],['Next 28 days'],['This month'],['Next month'],['Custom date range','27/10/2026 to 17/11/2026']];
+      return {
+        cuOpen: !!st.cuOpen, cuExp: st.cuOpen ? 'true' : 'false', cuLabel: sel, cuRot: st.cuOpen ? 'rotate(180deg)' : 'none', cuBorder: st.cuOpen ? '#14335C' : '#D5DCE6',
+        cuTop: st.cuPos ? st.cuPos.top : 'auto', cuBottom: st.cuPos ? st.cuPos.bottom : 'auto', cuRight: st.cuPos ? st.cuPos.right : '0', cuMaxH: st.cuPos ? st.cuPos.maxH : 'none',
+        cuToggle: (e) => {
+          if (st.cuOpen) { c.setState({ cuOpen: false }); return; }
+          let pos = null;
+          try {
+            const r = e.currentTarget.getBoundingClientRect(), H = 330, G = 4, M = 8;
+            const below = window.innerHeight - r.bottom - G - M, above = r.top - G - M;
+            const right = Math.max(M, window.innerWidth - r.right) + 'px';
+            pos = (below >= H || below >= above)
+              ? { top: (r.bottom + G) + 'px', bottom: 'auto', right, maxH: below + 'px' }
+              : { top: 'auto', bottom: (window.innerHeight - r.top + G) + 'px', right, maxH: above + 'px' };
+          } catch (err) {}
+          c.setState({ cuOpen: true, cuPos: pos, aOpen: false, oOpen: false });
+        },
+        cuClose: () => c.setState({ cuOpen: false }),
+        cuOpts: opts.map(([label, sub]) => ({ label, sub: sub || '', sel: label === sel ? 'true' : 'false', bg: label === sel ? '#EEF2F7' : 'transparent', fw: label === sel ? 600 : 400,
+          pick: () => c.setState({ cuSel: label, cuOpen: false }) }))
+      };
+    })(),
+    orgItems: [['Dashboard'],['Trust Account',[['Organisation Ledger'],['Fees'],['GST'],['Costs & Disbursements'],['test 22 jan'],['test 22 jan 2']]],['Auto Finance'],['Workflows',[['Contract of Sale',1]]],['Templates'],['Brochures'],['Councils'],['Staff Profiles'],['Powers and Estates'],['Settings']]
+      .map(([label, subs]) => ({ label, sub: !!subs, pop: subs ? 'menu' : 'false', subs: (subs || []).map(([l, s]) => ({ label: l, sub: !!s })) })),
+    oOpen: !!st.oOpen, oExp: st.oOpen ? 'true' : 'false', oBg: st.oOpen ? '#EEF2F7' : 'transparent',
+    oToggle: () => c.setState({ oOpen: !st.oOpen, aOpen: false, rOpen: false }),
+    oClose: () => c.setState({ oOpen: false }),
+    aOpen: !!st.aOpen, aExp: st.aOpen ? 'true' : 'false', rOpen: !!st.rOpen, rExp: st.rOpen ? 'true' : 'false',
+    aToggle: () => c.setState({ aOpen: !st.aOpen, rOpen: false, oOpen: false }),
+    aClose: () => c.setState({ aOpen: false }),
+    rOpenFn: () => c.setState({ rOpen: true, aOpen: false, oOpen: false }),
+    rClose: () => c.setState({ rOpen: false })
+  };
+}
+const DY_DEFAULT = [
+  { id: 'd1', title: 'Searchlight 1dhfhdj', due: '2026-11-06', asg: 'Nishadi WA', workflow: true, tags: ['wf'] },
+  { id: 'd2', title: 'ROL Lodged (Due 17/12/2026)', due: '2026-11-26', asg: 'Nishadi WA', workflow: false, tags: [] },
+  { id: 'd3', title: 'Searchlight 1', due: '2026-11-26', asg: 'Nishadi WA', workflow: true, tags: ['pts', 'wf'] }
+];
+function rcDiaryVals(c) {
+  const st = c.state || {};
+  const items = st.dyItems || DY_DEFAULT;
+  const q = (st.dyQ || '').trim().toLowerCase();
+  const sel = st.dySel || {}, done = st.dyDone || {}, na = st.dyNA || {}, open = st.dyOpen || {}, gcol = st.dyGCol || {};
+  const notes = st.tkNotes || {};
+  const TAG = { wf: ['Workflow', '#E6EEF8', '#14335C'], pts: ['Pathway to settlement', '#E3F4EA', '#1A6B45'] };
+  const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const T = Date.UTC(2026, 9, 27);
+  const F = st.dyF || { asg: 'all', type: 'all' }, FD = st.dyFD || F;
+  const stOf = (i) => done[i.id] ? 'done' : na[i.id] ? 'na' : 'open';
+  const TYPES = { all: 'All', open: 'Open', done: 'Completed', na: 'Not applicable' };
+  const shown = items.filter(i => (F.asg === 'all' || i.asg === F.asg) && (F.type === 'all' || stOf(i) === F.type)).filter(i => !q || (i.title + ' ' + i.asg).toLowerCase().includes(q)).slice().sort((a, b) => a.due < b.due ? -1 : a.due > b.due ? 1 : 0);
+  const byDate = {};
+  shown.forEach(i => { (byDate[i.due] = byDate[i.due] || []).push(i); });
+  const fmt = (iso) => { const [y, m, d] = iso.split('-'); return d + '/' + m + '/' + y; };
+  const groups = Object.keys(byDate).sort().map(iso => {
+    const [y, m, d] = iso.split('-').map(Number), dt = new Date(Date.UTC(y, m - 1, d)), diff = Math.round((dt - T) / 864e5);
+    const isOpen = !gcol[iso], list = byDate[iso];
+    return { hid: 'dy-g-' + iso, label: DAYS[dt.getUTCDay()] + ', ' + d + ' ' + MON[m - 1] + ' ' + y, mon: MON[m - 1], day: d,
+      rel: diff === 0 ? 'Today' : diff === 1 ? 'Tomorrow' : diff > 0 ? 'In ' + diff + ' days' : Math.abs(diff) + ' days ago',
+      calBg: diff < 0 ? '#FEE4E2' : '#E6EEF8', calFg: diff < 0 ? '#B42318' : '#14335C',
+      count: list.length + (list.length === 1 ? ' item' : ' items'), open: isOpen, exp: isOpen ? 'true' : 'false', rot: isOpen ? 'rotate(180deg)' : 'none',
+      toggle: () => c.setState({ dyGCol: { ...gcol, [iso]: isOpen } }),
+      items: list.map(i => { const dn = !!done[i.id], n = !!na[i.id], o = !!open[i.id], cm = (notes['dy-' + i.id] || []).length;
+        const tags = i.tags.map(t => ({ label: TAG[t][0], bg: TAG[t][1], fg: TAG[t][2] }));
+        if (n) tags.push({ label: 'Not applicable', bg: '#F1F4F8', fg: '#5A6577' });
+        if (dn) tags.push({ label: 'Completed', bg: '#E3F4EA', fg: '#1A6B45' });
+        return { ...i, tags, comments: cm, commentWord: cm === 1 ? 'comment' : 'comments', sel: !!sel[i.id],
+          bg: sel[i.id] ? '#F2F6FB' : dn || n ? '#FAFBFC' : '#fff', bd: '', titleColor: dn || n ? '#5A6577' : '#14335C', strike: dn ? 'line-through' : 'none',
+          manual: !i.workflow, canExpand: i.workflow, open: o, exp: o ? 'true' : 'false', rot: o ? 'rotate(180deg)' : 'none', expLabel: o ? 'Hide details' : 'Show details',
+          details: [{ k: 'Due date', v: fmt(i.due), color: '#172234' }, { k: 'Assigned to', v: i.asg, color: '#172234' }, { k: 'Source', v: i.tags.includes('pts') ? 'Pathway to settlement workflow' : 'Contract of Sale workflow', color: '#172234' },
+            { k: 'Status', v: dn ? 'Completed' : n ? 'Not applicable' : 'Open', color: dn ? '#1A6B45' : '#172234' }],
+          done: dn, notDone: !dn, donePressed: dn ? 'true' : 'false', doneCls: dn ? 'isdone' : '', doneTip: dn ? 'Completed · click to undo' : 'Mark as completed',
+          naPressed: n ? 'true' : 'false', naTip: n ? 'Not applicable · click to undo' : 'Mark as not applicable', naBg: n ? '#F1F4F8' : 'transparent', naStroke: n ? '#14335C' : '#3A4657',
+          toggleSel: () => c.setState({ dySel: { ...sel, [i.id]: !sel[i.id] } }),
+          toggleOpen: () => c.setState({ dyOpen: { ...open, [i.id]: !o } }),
+          toggleDone: () => c.setState({ dyDone: { ...done, [i.id]: !dn } }),
+          toggleNA: () => c.setState({ dyNA: { ...na, [i.id]: !n } }),
+          remove: () => c.setState({ dyItems: items.filter(x => x.id !== i.id) }),
+          openNotes: () => { const s = notes['dy-' + i.id] || []; c.setState({ nt: { key: 'dy-' + i.id, name: i.title, list: s.length ? s.slice() : [''] } }); },
+          edit: () => c.setState({ di: { editId: i.id, due: i.due, asg: i.asg, desc: i.title, notes: (notes['dy-' + i.id] || []).slice(), tried: false } }) }; })
+    };
+  });
+  const selCount = Object.keys(sel).filter(k => sel[k] && items.some(i => i.id === k)).length;
+  const openCount = items.filter(i => !done[i.id] && !na[i.id]).length;
+  return {
+    ...(() => { const chips = [];
+      if (F.asg !== 'all') chips.push({ label: 'Assignee: ' + F.asg, remove: () => c.setState({ dyF: { ...F, asg: 'all' }, dyFD: { ...F, asg: 'all' } }) });
+      if (F.type !== 'all') chips.push({ label: 'Diary status: ' + TYPES[F.type], remove: () => c.setState({ dyF: { ...F, type: 'all' }, dyFD: { ...F, type: 'all' } }) });
+      return { dyFOpen: !!st.dyFOpen, dyFExp: st.dyFOpen ? 'true' : 'false', dyFBg: st.dyFOpen ? '#EEF2F7' : '#fff', dyFBorder: st.dyFOpen ? '#14335C' : '#D5DCE6',
+        dyFCount: chips.length || false, dyChips: chips, dyHasChips: chips.length > 0,
+        dyFToggle: () => c.setState({ dyFOpen: !st.dyFOpen, dyFD: F }),
+        dyFAsg: FD.asg, dyFType: FD.type, dyFAsgB: FD.asg === 'all' ? '#D5DCE6' : '#14335C', dyFTypeB: FD.type === 'all' ? '#D5DCE6' : '#14335C',
+        dyFAsgChange: (e) => c.setState({ dyFD: { ...FD, asg: e.target.value } }), dyFTypeChange: (e) => c.setState({ dyFD: { ...FD, type: e.target.value } }),
+        dyFReset: () => c.setState({ dyFD: { asg: 'all', type: 'all' } }),
+        dyFApply: () => c.setState({ dyF: FD, dyFOpen: false }),
+        dyFClear: () => c.setState({ dyF: { asg: 'all', type: 'all' }, dyFD: { asg: 'all', type: 'all' } }) }; })(),
+    dyQ: st.dyQ || '', dyQInput: (e) => c.setState({ dyQ: e.target.value }),
+    dyGroups: groups, dyEmpty: shown.length === 0,
+    dySummary: items.length + ' items · ' + openCount + ' open',
+    dyEmptyHint: 0, dyRange: shown.length ? '1–' + shown.length + ' of ' + shown.length : '0 of 0',
+    dyHasSel: selCount > 0, dySelCount: selCount, dyClearSel: () => c.setState({ dySel: {} }),
+    dyAdd: () => c.setState({ di: { due: '2026-10-27', asg: 'Nishadi WA', desc: '', notes: [], tried: false } }),
+    diTitle: st.di && st.di.editId ? 'Edit diary item' : 'Add diary item'
+  };
+}
+function rcPtsVals(c) {
+  const st = c.state || {};
+  const acc = st.ptAcc || { people: true, funds: true, bank: true };
+  const people = st.ptPeople || [
+    { id: 'p1', name: 'Nishy perth properties', type: 'Proprietor on Title', email: 'nishyperthproperties1@yopmail.com', phone: '67575686868', status: 'none' },
+    { id: 'p2', name: 'Anne', type: 'Incoming Proprietor', email: '', phone: '', status: 'none' }];
+  const flash = (m) => { c.setState({ toast: m }); clearTimeout(c._toT); c._toT = setTimeout(() => c.setState({ toast: '' }), 2400); };
+  const now = () => { const t = new Date(); let h = t.getHours(); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; return String(t.getDate()).padStart(2, '0') + '/' + String(t.getMonth() + 1).padStart(2, '0') + '/' + t.getFullYear() + ' ' + String(h).padStart(2, '0') + ':' + String(t.getMinutes()).padStart(2, '0') + ' ' + ap; };
+  const invited = people.filter(p => p.status === 'invited').length;
+  const ptAcc = {}; [['people', people.length + (people.length === 1 ? ' participant' : ' participants')], ['funds', '0 requests'], ['bank', '0 requests']].forEach(([k, badge]) => { const on = !!acc[k];
+    ptAcc[k] = { open: on, exp: on ? 'true' : 'false', rot: on ? 'rotate(90deg)' : 'none', hbg: on ? '#F7F9FC' : '#fff', hbd: on ? '#E3E8EF' : 'transparent', badge, toggle: () => c.setState({ ptAcc: { ...acc, [k]: !on } }) }; });
+  return {
+    ptSummary: people.length + (people.length === 1 ? ' participant' : ' participants') + ' · ' + invited + ' invited',
+    ptAcc, ptNoPeople: people.length === 0,
+    ptPeople: people.map(p => { const inv = p.status === 'invited', can = !!p.email;
+      return { ...p, noEmail: !p.email, noPhone: !p.phone, invitedOn: inv ? p.invitedOn : false,
+        status: inv ? 'Invited' : 'Not invited', stBg: inv ? '#E6EEF8' : '#F1F4F8', stFg: inv ? '#14335C' : '#5A6577', stDot: inv ? '#1F6FB2' : '#9AA7B8',
+        inviteLabel: inv ? 'Resend invite' : 'Send invite', invCls: inv ? 'igsec' : 'igprim', cantInvite: !can, invOp: can ? 1 : 0.45, invCur: can ? 'pointer' : 'not-allowed',
+        inviteTip: can ? '' : 'Add an email address to send an invite',
+        invite: () => { if (!can) return; c.setState({ ptPeople: people.map(x => x.id === p.id ? { ...x, status: 'invited', invitedOn: now() } : x) }); flash((inv ? 'Invite resent to ' : 'Invite sent to ') + p.name); },
+        remove: () => { c.setState({ ptPeople: people.filter(x => x.id !== p.id) }); flash(p.name + ' removed from Pathway to settlement'); } }; })
+  };
+}
+function rcIntVals(c) {
+  const st = c.state || {};
+  const tab = st.igTab || 'pexa', ws = st.igWs || null, acc = st.igAcc || { ws: true, inv: true };
+  const flash = (m) => { c.setState({ toast: m }); clearTimeout(c._toT); c._toT = setTimeout(() => c.setState({ toast: '' }), 2400); };
+  const now = () => { const t = new Date(); let h = t.getHours(); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; return String(t.getDate()).padStart(2, '0') + '/' + String(t.getMonth() + 1).padStart(2, '0') + '/' + t.getFullYear() + ' ' + String(h).padStart(2, '0') + ':' + String(t.getMinutes()).padStart(2, '0') + ' ' + ap; };
+  const TABS = [['pexa', 'PEXA', 'M4 12h16M12 4a12 12 0 010 16M12 4a12 12 0 000 16M12 3a9 9 0 110 18 9 9 0 010-18z'], ['voi', 'VOI', 'M4 6h16v12H4zM8 10a2 2 0 104 0 2 2 0 00-4 0M7 16a3 3 0 016 0M15 10h3M15 13h3'], ['aml', 'AML', 'M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z'],
+    ['sl', 'Searchlight', 'M11 4a7 7 0 100 14 7 7 0 000-14zM20 20l-3.5-3.5'], ['sti', 'Stewart Title Insurance', 'M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6zM9 12l2 2 4-4'], ['mh', 'MovingHub', 'M3 7h11v9H3zM14 10h4l3 3v3h-7M7 19a2 2 0 100-4 2 2 0 000 4zM17 19a2 2 0 100-4 2 2 0 000 4z']];
+  const KEYS = ['ws', 'inv', 'docs', 'fin'];
+  const igAcc = {}; KEYS.forEach(k => { const on = !!acc[k]; igAcc[k] = { open: on, exp: on ? 'true' : 'false', rot: on ? 'rotate(90deg)' : 'none', hbg: on ? '#F7F9FC' : '#fff', hbd: on ? '#E3E8EF' : 'transparent',
+    badge: k === 'ws' ? (ws ? 'Created' : 'Not created') : k === 'inv' ? '0 invitations' : k === 'docs' ? 'After settlement' : false, toggle: () => c.setState({ igAcc: { ...acc, [k]: !on } }) }; });
+  return {
+    igSummary: ws ? 'PEXA workspace ' + ws.id + ' · last synced ' + ws.sync : 'No PEXA workspace yet for this matter',
+    igTabs: TABS.map(([k, label, icon]) => { const on = tab === k; return { label, icon, sel: on ? 'true' : 'false', fg: on ? '#14335C' : '#5A6577', line: on ? '#14335C' : 'transparent', fw: on ? 700 : 600, pick: () => c.setState({ igTab: k }) }; }),
+    igIsPexa: tab === 'pexa', igOther: tab !== 'pexa', igTabName: (TABS.find(t => t[0] === tab) || [, ''])[1], igAcc,
+    igWsId: ws ? ws.id : 'Not created', igWsIdColor: ws ? '#172234' : '#7A8699', igWsStatus: ws ? 'In preparation' : 'No workspace', igWsBg: ws ? '#E6EEF8' : '#F1F4F8', igWsFg: ws ? '#14335C' : '#5A6577',
+    igSync: ws ? ws.sync : 'Never', igSyncColor: ws ? '#172234' : '#7A8699',
+    igHasWs: !!ws, igNoWs: !ws, igCreateOp: ws ? 0.5 : 1, igUpdateOp: ws ? 1 : 0.5,
+    igCreateWs: () => { if (ws) return; const w = { id: 'PEXA-' + (4300000 + Math.floor(Math.random() * 99999)), sync: now() }; c.setState({ igWs: w }); flash('Workspace ' + w.id + ' created'); },
+    igUpdateWs: () => { if (!ws) return; c.setState({ igWs: { ...ws, sync: now() } }); flash('Workspace updated'); },
+    igNotif: () => flash(ws ? 'No new notifications' : 'Create a workspace to receive notifications'),
+    igRetrieveInv: () => flash('No new invitations found'), igCreateInv: () => flash('Invitation sending isn’t available in this prototype'), igSubSearch: () => flash('Subscriber search isn’t available in this prototype'),
+    igSendFin: () => flash(ws ? 'Financials sent to PEXA' : 'Create a workspace before sending financials'),
+    igSendBal: () => flash(ws ? 'Balance due sent to PEXA' : 'Create a workspace before sending the balance')
+  };
+}
+function rcTrustVals(c) {
+  const st = c.state || {};
+  const tab = st.taTab || 'ledger', sel = st.taSel || {}, desc = !!st.taDesc;
+  const TX = [{ id: 't2', no: 2, type: 'receipt', entry: '2025-09-10', ref: 'RC00000001', txn: '2025-09-10', party: 'Bank of Queensland', behalf: '', by: 'Juin SA', method: 'Bank cheque', details: 'test', amt: 123 }];
+  const fmt = (iso) => { const [y, m, d] = iso.split('-'); return d + '/' + m + '/' + y; };
+  const $ = (n) => '$' + n.toLocaleString('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const TABS = [['ledger', 'Ledger', 'M4 4h16v16H4zM4 9h16M9 9v11'], ['receipt', 'Receipts', 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6'], ['payment', 'Payments', 'M3 6h18v12H3zM3 10h18M7 15h4'], ['journal', 'Journal', 'M5 4h14v16H5zM9 8h6M9 12h6M9 16h4']];
+  let bal = 0; const withBal = TX.slice().sort((a, b) => a.entry < b.entry ? -1 : 1).map(t => { bal += t.type === 'payment' ? -t.amt : t.amt; return { ...t, bal }; });
+  let rows = withBal.filter(t => tab === 'ledger' || t.type === tab);
+  if (desc) rows = rows.slice().reverse();
+  const cr = withBal.filter(t => t.type !== 'payment').reduce((s, t) => s + t.amt, 0), dr = withBal.filter(t => t.type === 'payment').reduce((s, t) => s + t.amt, 0);
+  const n = rows.filter(r => sel[r.id]).length;
+  const tabName = (TABS.find(t => t[0] === tab) || [, ''])[1];
+  return {
+    taSummary: 'Balance ' + $(cr - dr) + ' · ' + withBal.length + (withBal.length === 1 ? ' transaction' : ' transactions'),
+    taKpis: [['Total received', $(cr), 'M12 19V5M5 12l7-7 7 7', '#E3F4EA', '#1A6B45', '#1A6B45'], ['Total paid out', $(dr), 'M12 5v14M5 12l7 7 7-7', '#FEE4E2', '#B42318', '#172234'], ['Balance held in trust', $(cr - dr), 'M3 10l9-6 9 6M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18', '#E6EEF8', '#14335C', '#14335C']]
+      .map(([label, value, icon, bg, fg, vc]) => ({ label, value, icon, bg, fg, vc })),
+    taTabs: TABS.map(([k, label, icon]) => { const on = tab === k, cnt = k === 'ledger' ? withBal.length : withBal.filter(t => t.type === k).length;
+      return { label, icon, sel: on ? 'true' : 'false', fg: on ? '#14335C' : '#5A6577', line: on ? '#14335C' : 'transparent', fw: on ? 700 : 600, count: cnt || false, cBg: on ? '#14335C' : '#E3E8EF', cFg: on ? '#fff' : '#3A4657', pick: () => c.setState({ taTab: k, taSel: {} }) }; }),
+    taHasRows: rows.length > 0 || tab === 'ledger', taNoRows: rows.length === 0 && tab !== 'ledger', taShowOpen: tab === 'ledger',
+    taEmptyTitle: 'No ' + tabName.toLowerCase() + ' yet', taEmptyText: tabName + ' for this matter will appear here.',
+    taSort: () => c.setState({ taDesc: !desc }), taSortAria: desc ? 'descending' : 'ascending', taUp: desc ? '#B9C6D8' : '#14335C', taDown: desc ? '#14335C' : '#B9C6D8',
+    taAll: rows.length > 0 && n === rows.length, taToggleAll: () => { const o = {}; if (n !== rows.length) rows.forEach(r => { o[r.id] = true; }); c.setState({ taSel: o }); },
+    taRows: rows.map(t => ({ id: t.id, no: t.no, entry: fmt(t.entry), ref: t.ref, txn: fmt(t.txn), party: t.party, behalf: t.behalf || '—', by: t.by, method: t.method, details: t.details,
+      dir: t.type === 'payment' ? 'Paid to' : 'Received from', dirFg: t.type === 'payment' ? '#B42318' : '#1A6B45',
+      debit: t.type === 'payment' ? $(t.amt) : '', credit: t.type !== 'payment' ? $(t.amt) : '', balance: $(t.bal),
+      sel: !!sel[t.id], bg: sel[t.id] ? '#F2F6FB' : 'transparent', toggleSel: () => c.setState({ taSel: { ...sel, [t.id]: !sel[t.id] } }) })),
+    taFootLabel: n ? n + ' selected' : 'Totals', taDebit: $(dr), taCredit: $(cr), taBalance: $(cr - dr),
+    taProp: st.taProp || 'p1',
+    taPropOpen: !st.taPropCol, taPropExp: st.taPropCol ? 'false' : 'true', taPropRot: st.taPropCol ? 'none' : 'rotate(180deg)', taPropToggle: () => c.setState({ taPropCol: !st.taPropCol }),
+    taParties: [{ role: 'Incoming Proprietor', rep: false, name: 'Anne', addr: '' }, { role: 'Proprietor on Title', rep: true, name: 'Nishy perth properties', addr: "360 South Street O'Connor, WA 6163 Australia" }]
+      .map(p => ({ ...p, nameColor: p.name ? '#172234' : '#7A8699', addr: p.addr || 'Not set', addrColor: p.addr ? '#172234' : '#7A8699' }))
+  };
+}
+function rcDocsVals(c) {
+  const st = c.state || {};
+  const tab = st.dcTab || 'docs';
+  const base = st.dcItems || [
+    { id: 'f1', folder: 'docs', name: 'sec7.pdf', date: '27/10/2026', time: '06:15 PM', size: 'PDF · 214 KB', signer: '' },
+    { id: 'f2', folder: 'docs', name: 'Certificate of Title.pdf', date: '27/10/2026', time: '06:15 PM', size: 'PDF · 1.2 MB', signer: '' }];
+  const sel = st.dcSel || {}, star = st.dcStar || {}, q = (st.dcQ || '').trim().toLowerCase();
+  const TABS = [['docs', 'Documents', 'M6 3h8l4 4v14H6zM14 3v4h4'], ['draft', 'Draft documents', 'M4 20h4L19 9l-4-4L4 16z'], ['qa', 'QA', 'M9 9a3 3 0 115 2c-1 1-2 1.5-2 3M12 17v.5'],
+    ['hhh', 'HHH', 'M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z'], ['tpl', 'Template 01', 'M4 4h16v16H4zM4 9h16M9 9v11'],
+    ['pts', 'PTS docs', 'M5 21V4M5 4h11l-2 4 2 4H5'], ['all', 'All', 'M4 6h16M4 12h16M4 18h16']];
+  const inTab = (k) => k === 'all' ? base : base.filter(d => d.folder === k);
+  const list = inTab(tab).filter(d => !q || d.name.toLowerCase().includes(q));
+  const tabName = (TABS.find(t => t[0] === tab) || [, 'Documents'])[1];
+  const selIds = list.filter(d => sel[d.id]).map(d => d.id), n = selIds.length;
+  const EXT = { PDF: ['#FDECEC', '#D92D20'], DOCX: ['#E6EEF8', '#1F4B85'], DOC: ['#E6EEF8', '#1F4B85'], XLSX: ['#E3F4EA', '#1A6B45'], JPG: ['#FFF7E0', '#7A4F00'], PNG: ['#FFF7E0', '#7A4F00'] };
+  const flash = (m) => { c.setState({ toast: m }); clearTimeout(c._toT); c._toT = setTimeout(() => c.setState({ toast: '' }), 2400); };
+  const addFiles = (files) => { const fs = Array.from(files || []); if (!fs.length) return; const now = new Date();
+    const dd = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0') + '/' + now.getFullYear();
+    let h = now.getHours(), ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; const tm = String(h).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ' ' + ap;
+    const kb = (s) => s > 1048576 ? (s / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(s / 1024)) + ' KB';
+    const add = fs.map((f, i) => ({ id: 'u' + Date.now() + i, folder: tab === 'all' ? 'docs' : tab, name: f.name, date: dd, time: tm, size: ((f.name.split('.').pop() || 'file').toUpperCase()) + ' · ' + kb(f.size || 0), signer: '' }));
+    c.setState({ dcItems: add.concat(base), dcDrag: false }); flash(add.length === 1 ? 'Uploaded ' + add[0].name : 'Uploaded ' + add.length + ' files'); };
+  const pv = st.dcPrev ? base.find(d => d.id === st.dcPrev) : null;
+  const saveName = (id) => { const v = ((st.dcRen && st.dcRen.v) || '').trim(); c.setState({ dcRen: null, dcItems: v ? base.map(x => x.id === id ? { ...x, name: v } : x) : base }); if (v) flash('Renamed to ' + v); };
+  const mi = st.dcMenu ? base.find(d => d.id === st.dcMenu.id) : null;
+  const FOLDER = { docs: 'Documents', draft: 'Draft documents', qa: 'QA', hhh: 'HHH', tpl: 'Template 01', pts: 'PTS docs' };
+  const doBundle = () => { if (n < 2) return; const nm = (st.dcBName || '').trim(); if (!nm) { c.setState({ dcBTried: true }); return; }
+    const now = new Date(), dd = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0') + '/' + now.getFullYear();
+    let h = now.getHours(), ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; const tm = String(h).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ' ' + ap;
+    const file = { id: 'b' + Date.now(), folder: tab === 'all' ? 'docs' : tab, name: (/\.pdf$/i.test(nm) ? nm : nm + '.pdf'), date: dd, time: tm, size: 'PDF · bundle of ' + n, signer: '' };
+    c.setState({ dcItems: [file].concat(base), dcSel: {}, dcBName: '', dcBTried: false }); flash('Bundle “' + file.name + '” created from ' + n + ' documents'); };
+  return {
+    dcSummary: (() => { const t = base.length; return t + (t === 1 ? ' document' : ' documents') + ' on this matter'; })(),
+    dcQ: st.dcQ || '', dcQInput: (e) => c.setState({ dcQ: e.target.value }),
+    dcTabs: TABS.map(([k, label, icon]) => { const on = tab === k, cnt = inTab(k).length;
+      return { label, icon, sel: on ? 'true' : 'false', fg: on ? '#14335C' : '#5A6577', line: on ? '#14335C' : 'transparent', fw: on ? 700 : 600,
+        count: cnt || false, cBg: on ? '#14335C' : '#E3E8EF', cFg: on ? '#fff' : '#3A4657', pick: () => c.setState({ dcTab: k, dcSel: {} }) }; }),
+    dcTabName: tabName, dcCountLabel: list.length + (list.length === 1 ? ' file' : ' files'),
+    dcHint: n >= 2 ? n + ' documents selected — ready to bundle' : n === 1 ? 'Select at least one more document to bundle' : 'Select 2 or more documents to bundle them into one PDF',
+    dcSelCount: n || false, dcCantBundle: n < 2, dcBundleBg: n >= 2 ? '#14335C' : '#EEF1F5', dcBundleFg: n >= 2 ? '#fff' : '#7A8699', dcBundleCur: n >= 2 ? 'pointer' : 'not-allowed',
+    dcBName: st.dcBName || '', dcBErr: !!st.dcBTried && !(st.dcBName || '').trim(), dcBErrA: st.dcBTried && !(st.dcBName || '').trim() ? 'true' : 'false',
+    dcBInBg: n >= 2 ? '#fff' : '#F1F4F8', dcBInCur: n >= 2 ? 'text' : 'not-allowed',
+    dcBBd: st.dcBTried && !(st.dcBName || '').trim() ? '#B42318' : '#D5DCE6',
+    dcBNameInput: (e) => c.setState({ dcBName: e.target.value }),
+    dcBNameKey: (e) => { if (e.key === 'Enter') doBundle(); },
+    dcBundle: () => doBundle(),
+    dcAll: list.length > 0 && n === list.length,
+    dcToggleAll: () => { const all = list.length > 0 && n === list.length, o = {}; if (!all) list.forEach(d => { o[d.id] = true; }); c.setState({ dcSel: o }); },
+    dcGroupOpen: !st.dcGCol, dcGroupExp: st.dcGCol ? 'false' : 'true', dcGroupRot: st.dcGCol ? 'none' : 'rotate(90deg)', dcGroupToggle: () => c.setState({ dcGCol: !st.dcGCol }),
+    dcEmpty: list.length === 0, dcEmptyTitle: q ? 'No matching documents' : 'No documents in ' + tabName, dcEmptyText: q ? 'Try a different search.' : 'Drop files above to add them to this folder.',
+    dcRows: list.map(d => { const ext = (d.name.split('.').pop() || '').toUpperCase(), col = EXT[ext] || ['#F1F4F8', '#3A4657'], s = !!star[d.id];
+      return { ...d, ext: ext.slice(0, 4), extBg: col[0], extFg: col[1], sel: !!sel[d.id], bg: sel[d.id] ? '#F2F6FB' : 'transparent',
+        signer: d.signer || 'Not sent', sgBg: d.signer ? '#E3F4EA' : '#F1F4F8', sgFg: d.signer ? '#1A6B45' : '#5A6577',
+        starPressed: s ? 'true' : 'false', starTip: s ? 'Remove star' : 'Star', starFill: s ? '#F5B301' : 'none', starStroke: s ? '#C98A00' : '#3A4657',
+        toggleSel: () => c.setState({ dcSel: { ...sel, [d.id]: !sel[d.id] } }), star: () => c.setState({ dcStar: { ...star, [d.id]: !s } }),
+        view: () => c.setState({ dcPrev: d.id }), download: () => flash('Downloading ' + d.name),
+        moreExp: st.dcMenu && st.dcMenu.id === d.id ? 'true' : 'false', moreBg: st.dcMenu && st.dcMenu.id === d.id ? '#EEF2F7' : 'transparent',
+        more: (e) => { let p = {}; try { const r = e.currentTarget.getBoundingClientRect(), H = 140, W = 230; const below = window.innerHeight - r.bottom;
+          p = below > H + 12 ? { top: (r.bottom + 4) + 'px', bottom: 'auto' } : { top: 'auto', bottom: (window.innerHeight - r.top + 4) + 'px' }; p.left = Math.max(8, Math.min(r.right - W, window.innerWidth - W - 8)) + 'px'; } catch (x) {}
+          c.setState({ dcMenu: { id: d.id, ...p } }); },
+        renaming: !!(st.dcRen && st.dcRen.id === d.id), notRenaming: !(st.dcRen && st.dcRen.id === d.id), rid: 'dc-r-' + d.id, draft: st.dcRen && st.dcRen.id === d.id ? st.dcRen.v : d.name,
+        draftChange: (e) => c.setState({ dcRen: { id: d.id, v: e.target.value } }),
+        renameSave: () => saveName(d.id), renameCancel: () => c.setState({ dcRen: null }),
+        renameKey: (e) => { if (e.key === 'Enter') saveName(d.id); else if (e.key === 'Escape') c.setState({ dcRen: null }); },
+        remove: () => { const ns = { ...sel }; delete ns[d.id]; c.setState({ dcItems: base.filter(x => x.id !== d.id), dcSel: ns }); flash('Deleted ' + d.name); } }; }),
+    dcFiles: (e) => { addFiles(e.target.files); try { e.target.value = ''; } catch (x) {} },
+    dcDropBd: st.dcDrag ? '#14335C' : '#B9C6D8', dcDropBg: st.dcDrag ? '#EEF2F7' : '#fff',
+    dcDragOver: (e) => { e.preventDefault(); if (!st.dcDrag) c.setState({ dcDrag: true }); }, dcDragLeave: () => c.setState({ dcDrag: false }),
+    dcDrop: (e) => { e.preventDefault(); addFiles(e.dataTransfer && e.dataTransfer.files); c.setState({ dcDrag: false }); },
+    dcMenuOpen: !!mi, dcMenuTop: st.dcMenu ? st.dcMenu.top || 'auto' : 'auto', dcMenuBottom: st.dcMenu ? st.dcMenu.bottom || 'auto' : 'auto', dcMenuLeft: st.dcMenu ? st.dcMenu.left || '0' : '0',
+    dcMenuClose: () => c.setState({ dcMenu: null }), dcMenuKey: (e) => { if (e.key === 'Escape') c.setState({ dcMenu: null }); },
+    dcMenuItems: !mi ? [] : [
+      { label: 'Rename', icon: 'M4 20h4L19 9l-4-4L4 16z', run: () => c.setState({ dcMenu: null, dcRen: { id: mi.id, v: mi.name } }) },
+      { label: 'Show in folder', icon: 'M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z', run: () => { c.setState({ dcMenu: null, dcTab: mi.folder, dcQ: '', dcSel: { [mi.id]: true } }); flash('Showing ' + mi.name + ' in ' + FOLDER[mi.folder]); } },
+      { label: 'Send document via PTS', icon: 'M3 20l18-8L3 4v6l12 2-12 2z', run: () => { c.setState({ dcMenu: null, dcItems: base.map(x => x.id === mi.id ? { ...x, signer: 'Sent via PTS' } : x) }); flash(mi.name + ' sent via Pathway to Settlement'); } }],
+    dcPrevOpen: !!pv, dcPrev: pv ? { name: pv.name, download: () => flash('Downloading ' + pv.name) } : { name: '', download: () => {} },
+    dcPrevClose: () => c.setState({ dcPrev: null }), dcPrevKey: (e) => { if (e.key === 'Escape') { e.stopPropagation(); c.setState({ dcPrev: null }); } }
+  };
+}
+function rcCommsVals(c) {
+  const st = c.state || {};
+  const tab = st.cmTab || 'emails';
+  const base = st.cmItems || [{ id: 'm2', folder: 'emails', from: 'settlements@northbridgebank.com.au', name: 'Northbridge Bank Settlements', date: '26/10/2026', subject: 'Discharge authority received – 00334', snippet: 'We confirm receipt of the signed discharge authority for the mortgage over 56 Thomas Street, West Perth. The discharge has been allocated to our settlements team.', body: 'Hi Nishadi,\n\nWe confirm receipt of the signed discharge authority for the mortgage over 56 Thomas Street, West Perth. The discharge has been allocated to our settlements team.\n\nWe will join the PEXA workspace once it has been created and will confirm the payout figure 48 hours before settlement.\n\nRegards,\n\nSettlements Team\nNorthbridge Bank' }, { id: 'm3', folder: 'emails', from: 'nishyperthproperties1@yopmail.com', name: 'Nishy perth properties', date: '24/10/2026', subject: 'Signed transfer documents', snippet: 'Attached are the signed transfer documents and the verification of identity form you asked for. Let me know if anything else is needed before settlement.', body: 'Hi Nishadi,\n\nAttached are the signed transfer documents and the verification of identity form you asked for. Let me know if anything else is needed before settlement.\n\nThanks,\n\nNishy perth properties' }, { id: 'm6', folder: 'emails', from: 'anne.c@mailbox.com.au', name: 'Anne', date: '18/10/2026', subject: 'Question about the possession date', snippet: 'Could you confirm whether possession will still be on 16 October, or if it moves with the settlement date? We are trying to book removalists.', body: 'Hi,\n\nCould you confirm whether possession will still be on 16 October, or if it moves with the settlement date? We are trying to book removalists.\n\nThanks so much,\n\nAnne' }, { id: 'm1', folder: 'emails', from: 'anna+test@realtimeconveyancer.com.au', date: '11/09/2025', subject: '1 King William Street', snippet: 'Please find attached the signed contract and the vendor\'s disclosure statement for 1 King William Street. The purchaser\'s finance approval came through…', body: 'Hi Nishadi,\n\nPlease find attached the signed contract and the vendor\'s disclosure statement for 1 King William Street. The purchaser\'s finance approval came through this morning, so we\'re happy to confirm the contract is now unconditional.\n\nCould you let us know your availability to book settlement in PEXA for the week of 16 November? We\'d also appreciate an updated settlement statement once the adjustments are finalised.\n\nIf you need anything else from our side, just let me know.\n\nKind regards,\n\nAnna\nRealtime Conveyancer', saved: true, name: 'Anna' }, { id: 'm4', folder: 'pts', from: 'pathway@realtimeconveyancer.com.au', name: 'Realtime Pathway', date: '15/10/2026', subject: 'Settlement booked – 56 Thomas Street', snippet: 'Settlement for matter 00334 has been booked in PEXA for 16 October 2026. All parties have been notified and the workspace is ready for financial settlement details.', body: 'Hello,\n\nSettlement for matter 00334 has been booked in PEXA for 16 October 2026. All parties have been notified and the workspace is ready for financial settlement details.\n\nRealtime Pathway to Settlement' }, { id: 'm5', folder: 'other', from: 'sales@harbourrealty.com.au', name: 'Harbour Realty', date: '12/10/2026', subject: 'Deposit receipt – 56 Thomas Street', snippet: 'Please find our receipt for the $4,000.00 deposit paid by the purchaser for 56 Thomas Street, West Perth. Funds are held in our trust account.', body: 'Hi Nishadi,\n\nPlease find our receipt for the $4,000.00 deposit paid by the purchaser for 56 Thomas Street, West Perth. Funds are held in our trust account.\n\nKind regards,\n\nHarbour Realty' }];
+  const star = st.cmStar || { m2: true }, q = (st.cmQ || '').trim().toLowerCase(), show = st.cmShow || 'all';
+  const TABS = [['emails', 'Emails', 'M3 6h18v12H3zM3 7l9 6 9-6'], ['pts', 'Pathway to settlement', 'M5 21V4M5 4h11l-2 4 2 4H5'], ['other', 'Other', 'M4 7h16v12H4zM4 7l2-3h12l2 3'],
+    ['fdfd', 'FDFD', 'M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z'], ['fdf', 'FDF', 'M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z'],
+    ['bin', 'Recycle bin', 'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3']];
+  const inTab = (k) => base.filter(m => m.folder === k);
+  const list = inTab(tab).filter(m => (show === 'all' || star[m.id]) && (!q || (m.from + ' ' + m.subject + ' ' + m.body).toLowerCase().includes(q)));
+  const selId = st.cmSel === undefined ? (list[0] && list[0].id) : st.cmSel;
+  const sel = list.find(m => m.id === selId);
+  const COL = ['#14335C', '#3E8E7E', '#7A4F9E', '#B54708', '#1F6FB2'];
+  const av = (s) => COL[s.charCodeAt(0) % COL.length];
+  const ren = st.cmRen || null, read = st.cmRead || {}, chk = st.cmChk || {};
+  const addFiles = (files) => { const fs = Array.from(files || []).filter(f => /\.(eml|msg)$/i.test(f.name)); if (!fs.length) return;
+    const now = new Date(), dd = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0') + '/' + now.getFullYear();
+    const add = fs.map((f, i) => ({ id: 'u' + Date.now() + i, folder: 'emails', from: 'Uploaded file', date: dd, subject: f.name.replace(/\.(eml|msg)$/i, ''), snippet: f.name, body: '', failed: true }));
+    c.setState({ cmItems: add.concat(base), cmTab: 'emails', cmSel: add[0].id, cmDrag: false }); };
+  const emptyCopy = tab === 'bin' ? ['Recycle bin is empty', 'Deleted emails appear here.', 'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3']
+    : (q || show !== 'all') ? ['No matching emails', 'Try a different search or show all emails.', 'M11 4a7 7 0 100 14 7 7 0 000-14zM20 20l-3.5-3.5']
+    : ['No emails here yet', 'Emails filed to this folder will appear here.', 'M3 6h18v12H3zM3 7l9 6 9-6'];
+  const tabLabel = (TABS.find(t => t[0] === tab) || [, 'Emails'])[1];
+  return {
+    cmSummary: (() => { const n = base.filter(m => m.folder !== 'bin').length; return n + (n === 1 ? ' email' : ' emails') + ' on this matter'; })(),
+    cmQ: st.cmQ || '', cmQInput: (e) => c.setState({ cmQ: e.target.value }), cmShow: show, cmShowChange: (e) => c.setState({ cmShow: e.target.value }),
+    ...(() => { const OPTS = [['all', 'All emails', 'M3 6h18v12H3zM3 7l9 6 9-6'], ['starred', 'Starred', 'M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z']];
+      const cur = OPTS.find(o => o[0] === show) || OPTS[0], o = !!st.cmShowOpen;
+      return { cmShowOpen: o, cmShowExp: o ? 'true' : 'false', cmShowRot: o ? 'rotate(180deg)' : 'none', cmShowBd: o ? '#14335C' : '#D5DCE6', cmShowLabel: cur[1], cmShowIcon: cur[2],
+        cmShowToggle: () => c.setState({ cmShowOpen: !o }), cmShowClose: () => c.setState({ cmShowOpen: false }),
+        cmShowOpts: OPTS.map(([v, label, icon]) => ({ label, icon, on: v === show, sel: v === show ? 'true' : 'false', bg: v === show ? '#EEF2F7' : 'transparent', fw: v === show ? 700 : 500, fg: v === show ? '#14335C' : '#172234',
+          pick: () => c.setState({ cmShow: v, cmShowOpen: false }) })) }; })(),
+    cmTabs: TABS.map(([k, label, icon]) => { const on = tab === k, n = inTab(k).length;
+      return { label, icon, sel: on ? 'true' : 'false', fg: on ? '#14335C' : '#5A6577', line: on ? '#14335C' : 'transparent', fw: on ? 700 : 600,
+        count: n || false, cBg: on ? '#14335C' : '#E3E8EF', cFg: on ? '#fff' : '#3A4657', pick: () => c.setState({ cmTab: k, cmSel: undefined }) }; }),
+    cmCanUpload: tab !== 'bin', cmListLabel: tabLabel,
+    cmDropBd: st.cmDrag ? '#14335C' : '#B9C6D8', cmDropBg: st.cmDrag ? '#EEF2F7' : '#fff',
+    cmDragOver: (e) => { e.preventDefault(); if (!st.cmDrag) c.setState({ cmDrag: true }); }, cmDragLeave: () => c.setState({ cmDrag: false }),
+    cmDrop: (e) => { e.preventDefault(); addFiles(e.dataTransfer && e.dataTransfer.files); c.setState({ cmDrag: false }); },
+    cmFiles: (e) => { addFiles(e.target.files); try { e.target.value = ''; } catch (x) {} },
+    cmHasItems: list.length > 0, cmNoItems: list.length === 0, cmEmptyTitle: emptyCopy[0], cmEmptyText: emptyCopy[1], cmEmptyIcon: emptyCopy[2],
+    cmItems: list.map(m => { const on = m.id === selId, s = !!star[m.id], r = ren && ren.id === m.id, unread = !read[m.id] && !on;
+      return { ...m, initial: m.from.charAt(0).toUpperCase(), avBg: av(m.from), cur: on ? 'true' : 'false', unread,
+        dot: unread ? '#1F6FB2' : 'transparent', subW: unread ? 700 : 600, chk: !!chk[m.id], toggleChk: () => c.setState({ cmChk: { ...chk, [m.id]: !chk[m.id] } }),
+        ext: (m.snippet.match(/\.(eml|msg)$/i) || [, 'EML'])[1].toUpperCase(), hasChips: !!m.saved || !!m.failed,
+        bg: on ? '#F2F6FB' : 'transparent', ring: 'none', saved: !!m.saved, failed: !!m.failed,
+        starPressed: s ? 'true' : 'false', starTip: s ? 'Remove star' : 'Star', starFill: s ? '#F5B301' : 'none', starStroke: s ? '#C98A00' : '#B9C6D8',
+        open: () => c.setState({ cmSel: m.id, cmRead: { ...read, [m.id]: true } }), star: () => c.setState({ cmStar: { ...star, [m.id]: !s } }),
+        renaming: r, rid: 'cm-r-' + m.id, draft: r ? ren.v : m.subject,
+        edit: () => c.setState({ cmRen: r ? null : { id: m.id, v: m.subject } }),
+        draftChange: (e) => c.setState({ cmRen: { id: m.id, v: e.target.value } }),
+        renameSave: () => { const v = (ren && ren.v || '').trim(); c.setState({ cmRen: null, cmItems: v ? base.map(x => x.id === m.id ? { ...x, subject: v } : x) : base }); },
+        renameKey: (e) => { if (e.key === 'Enter') { const v = (ren && ren.v || '').trim(); c.setState({ cmRen: null, cmItems: v ? base.map(x => x.id === m.id ? { ...x, subject: v } : x) : base }); } else if (e.key === 'Escape') c.setState({ cmRen: null }); } }; }),
+    cmHasSel: !!sel, cmNoSel: !sel, cmSelOk: !!sel && !sel.failed, cmSelErr: !!sel && !!sel.failed,
+    cmSel: sel ? { ...sel, initial: sel.from.charAt(0).toUpperCase(), avBg: av(sel.from), name: sel.name || sel.from.split('@')[0].replace(/[+._]/g, ' ').replace(/\b\w/g, ch => ch.toUpperCase()),
+      starPressed: star[sel.id] ? 'true' : 'false', starTip: star[sel.id] ? 'Remove star' : 'Star', starFill: star[sel.id] ? '#F5B301' : 'none', starStroke: star[sel.id] ? '#C98A00' : '#9AA7B8',
+      star: () => c.setState({ cmStar: { ...star, [sel.id]: !star[sel.id] } }) } : { subject: '', from: '', date: '', body: '', initial: '', avBg: '', name: '' },
+    cmRetry: () => { c.setState({ toast: 'Still couldn’t load this email' }); clearTimeout(c._toT); c._toT = setTimeout(() => c.setState({ toast: '' }), 2400); }
+  };
+}
+function rcPopVals(c) {
+  const st = c.state || {};
+  const flash = (msg) => { c.setState({ toast: msg }); clearTimeout(c._toT); c._toT = setTimeout(() => c.setState({ toast: '' }), 2400); };
+  const esc = (k) => (e) => { if (e.key === 'Escape') { e.stopPropagation(); c.setState({ [k]: null }); } };
+  const o = { toast: st.toast || '', popStop: (e) => e.stopPropagation() };
+  const di = st.di;
+  if (di) { const set = (x) => c.setState({ di: { ...di, ...x } }); const bad = { due: !di.due, desc: !di.desc.trim() };
+    Object.assign(o, { diOpen: true, diDue: di.due, diAsg: di.asg, diDesc: di.desc,
+      diDueErr: di.tried && bad.due, diDescErr: di.tried && bad.desc, diDueB: di.tried && bad.due ? '#B42318' : '#D5DCE6', diDescB: di.tried && bad.desc ? '#B42318' : '#D5DCE6',
+      diDueChange: (e) => set({ due: e.target.value }), diAsgChange: (e) => set({ asg: e.target.value }), diDescChange: (e) => set({ desc: e.target.value }),
+      diNotes: di.notes.map((value, i) => ({ value, num: i + 1, id: 'di-n' + i, change: (e) => { const l = di.notes.slice(); l[i] = e.target.value; set({ notes: l }); }, remove: () => set({ notes: di.notes.filter((_, j) => j !== i) }) })),
+      diAddNote: () => set({ notes: di.notes.concat(['']) }),
+      diClose: () => c.setState({ di: null }), diKey: esc('di'),
+      diSubmit: () => { if (bad.due || bad.desc) { set({ tried: true }); return; }
+        const list = (st.dyItems || DY_DEFAULT).slice(), id = di.editId || ('n' + Date.now());
+        const nl = list.some(x => x.id === id) ? list.map(x => x.id === id ? { ...x, title: di.desc.trim(), due: di.due, asg: di.asg } : x)
+          : list.concat([{ id, title: di.desc.trim(), due: di.due, asg: di.asg, workflow: false, tags: [] }]);
+        c.setState({ di: null, dyItems: nl, tkNotes: { ...(st.tkNotes || {}), ['dy-' + id]: di.notes.map(s => s.trim()).filter(Boolean) } });
+        flash(di.editId ? 'Diary item updated' : 'Diary item added'); } });
+  } else o.diOpen = false;
+  const cn = st.cn;
+  if (cn) { const set = (x) => c.setState({ cn: { ...cn, ...x } }); const bad = { title: !cn.title.trim(), detail: !cn.detail.trim() };
+    Object.assign(o, { cnOpen: true, cnTitle: cn.title, cnDetail: cn.detail, cnAlert: cn.alert,
+      cnTitleErr: cn.tried && bad.title, cnDetailErr: cn.tried && bad.detail, cnTitleB: cn.tried && bad.title ? '#B42318' : '#D5DCE6', cnDetailB: cn.tried && bad.detail ? '#B42318' : '#D5DCE6',
+      cnTitleChange: (e) => set({ title: e.target.value }), cnDetailChange: (e) => set({ detail: e.target.value }), cnAlertChange: (e) => set({ alert: e.target.checked }),
+      cnClose: () => c.setState({ cn: null }), cnKey: esc('cn'),
+      cnSubmit: () => { if (bad.title || bad.detail) { set({ tried: true }); return; } c.setState({ cn: null }); flash(cn.alert ? 'Alert note created' : 'Note created'); } });
+  } else o.cnOpen = false;
+  return o;
+}
+function rcTasksVals(c) {
+  const st = c.state || {};
+  const party = st.tkParty || 'pot';
+  const openAll = st.tkOpen || { pot: 0, inc: 0 };
+  const doneAll = st.tkDone || { pot: [[false,false,false,false,false],[true,false,false,false,false],[false,false,false]], inc: [[false,false,false],[false,false,false]] };
+  const defs = party === 'pot' ? [
+    { name: 'POT Task One', subs: [['Send initial docs',0,21],['Contact other settlement agent',0,14],['Contact real estate agent',0,10],['Send an email',0,7],['Upload a file',0,3]] },
+    { name: 'POT Task Two', subs: [['[Subtask name]',0,14],['[Subtask name]',0,10],['[Subtask name]',0,7],['[Subtask name]',0,5],['[Subtask name]',0,2]] },
+    { name: 'POT Task Three', subs: [['[Subtask name]',0,2],['[Subtask name]',0,1],['[Subtask name]',0,0]] }
+  ] : [
+    { name: '[Incoming proprietor task]', subs: [['[Subtask name]',0,21],['[Subtask name]',0,14],['[Subtask name]',0,7]] },
+    { name: '[Incoming proprietor task]', subs: [['[Subtask name]',0,5],['[Subtask name]',0,3],['[Subtask name]',0,1]] }
+  ];
+  const SETTLE = new Date(2026, 9, 16), TODAY = new Date(2026, 9, 27);
+  const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const fmt = (dt) => dt.getDate() + ' ' + MON[dt.getMonth()] + ' ' + dt.getFullYear();
+  let overdueCount = 0, total = 0, done = 0;
+  const doneArr = doneAll[party], openIdx = openAll[party];
+  const tasks = defs.map((t, ti) => {
+    const subs = t.subs.map(([name, comments, off], si) => {
+      const dn = doneArr[ti][si];
+      const due = new Date(SETTLE); due.setDate(due.getDate() - off);
+      const daysLeft = Math.round((due - TODAY) / 86400000);
+      let dueText, dueBg, dueFg, late = false;
+      if (dn) { dueText = 'Done'; dueBg = '#E3F4EA'; dueFg = '#1A6B45'; }
+      else if (daysLeft < 0) { dueText = 'Overdue · ' + fmt(due); dueBg = '#FEE4E2'; dueFg = '#B42318'; late = true; }
+      else if (daysLeft <= 3) { dueText = 'Due in ' + daysLeft + 'd · ' + fmt(due); dueBg = '#FFF4D6'; dueFg = '#7A4F00'; }
+      else { dueText = 'Due ' + fmt(due); dueBg = '#F1F4F8'; dueFg = '#3A4657'; }
+      const nkey = party + '-' + ti + '-' + si, saved = (st.tkNotes || {})[nkey] || [];
+      return { name, comments: saved.length, done: dn,
+        openNotes: () => c.setState({ nt: { key: nkey, name, list: saved.length ? saved.slice() : [''] } }), late, dueText, dueBg, dueFg,
+        rule: off === 0 ? 'Due on settlement day' : off + (off === 1 ? ' day' : ' days') + ' before settlement',
+        strike: dn ? 'line-through' : 'none', color: dn ? '#5A6577' : '#172234',
+        pressed: dn ? 'true' : 'false', notDone: !dn, tickCls: dn ? 'isdone' : '', tickTip: dn ? 'Completed · click to undo' : 'Mark as completed', tickLabel: dn ? 'Mark ' + name + ' as not completed' : 'Mark ' + name + ' as completed', tickFill: dn ? '#1A7F4B' : 'none', tickStroke: dn ? '#1A7F4B' : '#3A4657', tickMark: dn ? '#fff' : '#3A4657',
+        toggle: () => { const next = JSON.parse(JSON.stringify(doneAll)); next[party][ti][si] = !next[party][ti][si]; c.setState({ tkDone: next }); } };
+    });
+    const cnt = subs.filter(s => s.done).length, lateN = subs.filter(s => s.late).length;
+    overdueCount += lateN; total += subs.length; done += cnt;
+    const open = openIdx === ti;
+    return { num: ti + 1, name: t.name, subs, open, overdue: lateN || false,
+      expanded: open ? 'true' : 'false', rot: open ? 'rotate(90deg)' : 'none',
+      count: cnt + ' / ' + subs.length, pct: Math.round(cnt / subs.length * 100) + '%',
+      toggle: () => c.setState({ tkOpen: { ...openAll, [party]: open ? -1 : ti } }) };
+  });
+  return { tk_tasks: tasks, tk_total: total, tk_done: done, tk_pct: Math.round(done / total * 100) + '%',
+    tk_progressText: done + ' of ' + total + ' subtasks complete', tk_overdueCount: overdueCount || false,
+    tk_potOn: party === 'pot' ? 'true' : 'false', tk_incOn: party === 'inc' ? 'true' : 'false',
+    ...(() => { const nt = st.nt; if (!nt) return { ntOpen: false };
+      const setList = (list) => c.setState({ nt: { ...nt, list } });
+      return { ntOpen: true, ntName: nt.name, ntEmpty: nt.list.length === 0,
+        ntList: nt.list.map((value, i) => ({ value, num: i + 1, id: 'nt-' + i,
+          change: (e) => { const l = nt.list.slice(); l[i] = e.target.value; setList(l); },
+          remove: () => setList(nt.list.filter((_, j) => j !== i)) })),
+        ntAdd: () => setList(nt.list.concat([''])),
+        ntStop: (e) => e.stopPropagation(), ntClose: () => c.setState({ nt: null }),
+        ntKey: (e) => { if (e.key === 'Escape') { e.stopPropagation(); c.setState({ nt: null }); } },
+        ntSubmit: () => c.setState({ nt: null, tkNotes: { ...(st.tkNotes || {}), [nt.key]: nt.list.map(s => s.trim()).filter(Boolean) } }) }; })(),
+    tk_setPot: () => c.setState({ tkParty: 'pot' }), tk_setInc: () => c.setState({ tkParty: 'inc' }) };
+}
+function rcMdVals(c) {
+  const st = c.state || {};
+  const sec = st.mdSec || { Matter: true };
+  const copied = st.mdCopied;
+  const COPY = 'M9 9h11v11H9zM5 15V5a2 2 0 012-2h10', TICK = 'M5 12.5l4.5 4.5L19 7.5';
+  const blue = { chipBg: '#E6EEF8', chipFg: '#14335C' }, green = { chipBg: '#E3F4EA', chipFg: '#1A6B45' }, amber = { chipBg: '#FFF7E0', chipFg: '#7A4F00' }, grey = { chipBg: '#F1F4F8', chipFg: '#3A4657' };
+  const doCopy = (key, text) => { try { navigator.clipboard && navigator.clipboard.writeText(text); } catch (e) {}
+    c.setState({ mdCopied: key }); clearTimeout(c._mdT); c._mdT = setTimeout(() => c.setState({ mdCopied: null }), 1800); };
+  const R = (sk, label, value, o = {}) => { const key = sk + ':' + label, on = copied === key, text = o.noCopy ? '' : (value || o.chip || '');
+    return { label, value, color: o.color || '#172234', chip: o.chip || false, chipBg: o.chipBg || '#F1F4F8', chipFg: o.chipFg || '#3A4657',
+      copyable: !!text, copyIcon: on ? TICK : COPY, copyColor: on ? '#1A6B45' : '#3A4657', copyTitle: on ? 'Copied' : 'Copy', doCopy: () => doCopy(key, text) }; };
+  const X = (label, value, o = {}) => ({ label, value, color: o.color || '#172234', chip: o.chip || false, chipBg: o.chipBg || '', chipFg: o.chipFg || '' });
+  const contacts = [
+    { role: 'Proprietor on title · Vendor', rep: true, initials: 'NP', name: 'Nishy perth properties', nick: '', company: "360 South Street O'Connor, WA 6163 Australia",
+      email: 'nishyperthproperties1@yopmail.com', phone: '67575686868', phoneFlag: '11 digits', extra: [X('Capacity', 'POA'), X('ACN', '406655338'), X('VOI', '', { chip: 'Not completed', ...amber })] },
+    { role: 'Incoming proprietor · Purchaser', rep: false, initials: 'AN', name: 'Anne', nick: '', company: '', email: '', phone: '', phoneFlag: false, extra: [] }
+  ].map((p, i) => { const on = copied === 'c' + i;
+    return { ...p, noEmail: !p.email, noPhone: !p.phone, tel: 'tel:' + p.phone.replace(/\s/g, ''),
+      copyLabel: on ? 'Copied' : 'Copy all', copyIcon: on ? TICK : COPY, copyBg: on ? '#E3F4EA' : '#fff', copyFg: on ? '#1A6B45' : '#14335C', copyBorder: on ? '#A8DCC0' : '#C9D4E3',
+      copyAll: () => doCopy('c' + i, [p.name, p.company, p.email, p.phone].filter(Boolean).join('\n')) }; });
+  const S = [
+    ['Matter', 'Matter', '5 not set', grey, [R('m', 'Matter type', 'Contract of Sale'), R('m', 'Workflow type', 'Contract of Sale'), R('m', 'Representing', 'Proprietor on Title'),
+      R('m', 'Assignee', 'Nishadi WA'), R('m', 'Contract acceptance', '23/10/2026'), R('m', 'Searchlight requests', '17 submitted')],
+      'Proprietor on Title BPAY CRN, PEXA workspace ID, Revenue Online (ROL), Electronic Advice of Sale (EAS), UIN', 'Add'],
+    ['Settle', 'Settlement', 'Settled', green, [R('s', 'Contract status', '', { chip: 'Conditional', ...amber }), R('s', 'Contractual due date', '16/10/2026', { color: '#344054' }),
+      R('s', 'Actual settlement date', '27/10/2026 · 09:33 AM', { color: '#1A6B45', chip: 'Settled', ...green }), R('s', 'Venue', 'PEXA')],
+      'Booked date, Held in trust', 'Add'],
+    ['Parties', 'Parties & contacts', '1 VOI pending', amber, null,
+      "Proprietor on Title's real estate agent, Incoming Proprietor's conveyancer, Broker, Additional contact", 'Add contact'],
+    ['Fin', 'Financials', 'Nothing in trust', grey, [R('f', 'Purchase price', '$0.00'), R('f', 'Deposit', '$4,000.00')], 'Held in trust', 'Add'],
+    ['Cond', 'Conditions', 'Finance pending', amber, [R('c', 'Finance', '', { chip: 'Pending', ...amber })], 'Due date, Approval date', 'Add'],
+    ['Prop', 'Property', '1 not set', grey, [R('p', 'Address', '56 Thomas Street West Perth, WA 6005'), R('p', 'Property type', 'Residential'),
+      R('p', 'Development', 'Water and Electricity'), R('p', 'Lot details', 'Lot 10 on Deposited Plan 12')], 'Volume/Folio', 'Complete']
+  ];
+  const NS = (k, missing) => (missing ? missing.split(', ') : []).map(l => R(k, l, 'Not set', { color: '#5A6577', noCopy: true }));
+  return {
+    mdSecs: S.map(([k, title, chip, cc, rows, missing, btn]) => { const open = !!sec[k];
+      return { title, chip, chipBg: cc.chipBg, chipFg: cc.chipFg, open, exp: open ? 'true' : 'false', rot: open ? 'rotate(180deg)' : 'none',
+        toggle: () => { const n = {}; S.forEach(([j]) => { n[j] = false; }); n[k] = !open; c.setState({ mdSec: n }); },
+        rows: rows ? rows.concat(NS(k, missing)) : [], hasRows: !!rows, isParties: k === 'Parties', contacts: k === 'Parties' ? contacts : [],
+        tailRows: rows ? [] : NS(k, missing) }; })
+  };
+}
+const NAV_ACTIVE = 'Pathway to settlement';
+const NAV_HREF = { 'Overview': 'matter-overview.html', 'Edit matter': 'edit-matter.html', 'Matter diary': 'matter-diary.html', 'Communications': 'communications.html', 'Documents': 'documents.html', 'Notes': 'notes.html', 'Financials': 'financials.html', 'Trust account': 'trust-account.html', 'Integrations': 'integrations.html', 'Pathway to settlement': 'pathway-to-settlement.html', 'History': 'history.html' };
+const NAVI = {"Overview": "M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z", "Edit matter": "M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4", "Matter diary": "M4 6h16v14H4zM4 10h16M8 3v4M16 3v4", "Communications": "M21 15a2 2 0 01-2 2H8l-5 4V5a2 2 0 012-2h14a2 2 0 012 2z", "Documents": "M6 3h8l4 4v14H6zM14 3v4h4M9 13h6M9 17h6", "Notes": "M5 4h14v11l-5 5H5zM14 20v-5h5M8 9h8M8 12h5", "Financials": "M12 3v18M16 7.5c-.6-1.2-2-2-4-2-2.2 0-4 1.1-4 2.8 0 4 8 2 8 6 0 1.7-1.8 2.8-4 2.8-2 0-3.5-.8-4.1-2.1", "Trust account": "M3 10l9-6 9 6M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18", "Integrations": "M9 3v4M15 3v4M7 7h10v4a5 5 0 01-10 0zM12 16v5", "Pathway to settlement": "M5 21V4M5 4h11l-2 4 2 4H5", "History": "M3 12a9 9 0 103-6.7L3 8M3 3v5h5M12 7v5l3 2"};
+function rcOverviewVals(c) {
+  const st = c.state || {};
+  const NS = 'Not set';
+  const copied = st.ovCopied || '';
+  const mkCopy = (key, label, text) => ({ copy: true, copyLabel: 'Copy ' + label.toLowerCase(), copied: copied === key, notCopied: copied !== key,
+    copyColor: copied === key ? '#067647' : '#5A6577',
+    doCopy: () => { try { navigator.clipboard && navigator.clipboard.writeText(text); } catch (e) {}
+      c.setState({ ovCopied: key }); clearTimeout(c._ovT); c._ovT = setTimeout(() => c.setState({ ovCopied: '' }), 1400); } });
+  let n = 0;
+  const F = (label, value, opt) => { const o = opt || {}, key = 'k' + (n++), empty = !value;
+    return { isField: true, isSub: false, label, text: o.chip ? '' : (value || NS), color: empty ? '#5A6577' : '#172234',
+      avatar: o.avatar || '', chip: o.chip || '', chipBg: o.chipBg || '', chipFg: o.chipFg || '',
+      ...(o.copy && !empty ? mkCopy(key, label, value) : { copy: false }) }; };
+  const SF = (label, value, copy) => { const key = 'k' + (n++), empty = !value;
+    return { label, text: value || NS, color: empty ? '#5A6577' : '#172234', ...(copy && !empty ? mkCopy(key, label, value) : { copy: false }) }; };
+  const SUB = (icon, title, fields, copy) => { const key = 'k' + (n++);
+    return { isField: false, isSub: true, iconBank: icon === 'bank', iconPerson: icon === 'person', iconCompany: icon === 'company',
+      subTitle: title || 'Not set', subColor: title ? '#172234' : '#5A6577', subBorder: fields.length ? '#E3E8EF' : 'transparent', fields,
+      ...(copy && title ? mkCopy(key, title, title) : { copy: false }) }; };
+  const SETTLED = ['Settled', '#DCFAE6', '#067647'], REP = ['Representing', '#E6EEF8', '#14335C'];
+  const sections = [
+    ['matter', 'Matter', null, false, [
+      F('Matter type', 'Contract of Sale', { copy: 1 }), F('Workflow type', 'Contract of Sale', { copy: 1 }), F('Representing', 'Proprietor on Title', { copy: 1 }),
+      F('Assignee', 'Nishadi WA', { copy: 1, avatar: 'NW' }), F('Proprietor on Title BPAY CRN', ''), F('PEXA workspace ID', ''),
+      F('Contract acceptance', '23/10/2026', { copy: 1 }), F('Revenue Online (ROL)', ''), F('Electronic Advice of Sale (EAS)', ''),
+      F('Unique Identification Number (UIN)', ''), F('Searchlight requests', '17 submitted')]],
+    ['property', 'Property', null, false, [
+      F('Address', '56 Thomas Street West Perth, WA 6005', { copy: 1 }), F('Purchase price', '$0.00', { copy: 1 }), F('Deposit', '$4,000.00', { copy: 1 }),
+      F('Property type', 'Residential', { copy: 1 }), F('Volume/Folio', '')]],
+    ['settlement', 'Settlement', SETTLED, false, [
+      { ...F('Conditional / unconditional', 'Conditional', { copy: 1, chip: 'Conditional', chipBg: '#FEF0C7', chipFg: '#93370D' }), color: '#172234' },
+      F('Contractual due date', '16/10/2026', { copy: 1 }), F('Booked date', ''), F('Venue', 'PEXA', { copy: 1 }),
+      F('Actual settlement date', '27/10/2026 · 09:33 AM', { copy: 1 }), F('Held in trust', '')]],
+    ['conditions', 'Conditions', null, false, [SUB('bank', 'Finance', [SF('Due date', ''), SF('Approval date', '')], true)]],
+    ['pot', 'Proprietor on Title', REP, true, [SUB('person', 'Nishy perth properties', [SF('Capacity', 'POA', true), SF('Email', 'nishyperthproperties1@yopmail.com', true),
+      SF('Phone', '67575686868', true), SF('VOI date', ''), SF('ACN', '406655338', true)], true)]],
+    ['potagent', "Proprietor on Title's real estate agent", null, false, [SUB('company', '', [SF('Company', ''), SF('Email', ''), SF('Phone', ''), SF('ACN', '')], false)]],
+    ['ip', 'Incoming Proprietor', null, true, [SUB('person', 'Anne', [], true)]],
+    ['broker', 'Broker information', null, false, []],
+    ['ipconv', "Incoming Proprietor's conveyancer", null, false, [SUB('company', '', [SF('Company', ''), SF('Email', ''), SF('Phone', ''), SF('ACN', '')], false)]],
+    ['addl', 'Additional contact', null, false, []]
+  ];
+  const col = st.ovCol || {};
+  const tab = st.ovTab || 'Overview';
+  const IC = {"pin": "M12 21s-7-6.2-7-11.5A7 7 0 0119 9.5C19 14.8 12 21 12 21zM12 12a2.5 2.5 0 100-5 2.5 2.5 0 000 5z", "bolt": "M13 3L5 14h6l-1 7 8-11h-6z", "book": "M5 4h10a3 3 0 013 3v13H8a3 3 0 01-3-3zM5 17a3 3 0 013-3h10", "grid": "M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z", "cal": "M4 6h16v14H4zM4 10h16M8 3v4M16 3v4", "key": "M15 7a4 4 0 11-3.9 4.9L4 19v-3h3v-3h3l1.1-1.1A4 4 0 0115 7z", "swap": "M7 7h12l-3-3M17 17H5l3 3", "bank": "M3 10l9-6 9 6M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18", "user": "M12 12a4 4 0 100-8 4 4 0 000 8zM4 21a8 8 0 0116 0", "mail": "M3 5h18v14H3zM3 7l9 6 9-6", "phone": "M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"};
+  const cardF = (label, value, icon, kind, extra) => { const e = extra || {}, empty = !value;
+    return { label, value: value || '', icon: IC[icon], empty, isText: !empty && (!kind || kind === 'text'), isName: !empty && kind === 'name', isLink: !empty && (kind === 'email' || kind === 'phone'),
+      href: kind === 'email' ? 'mailto:' + value : kind === 'phone' ? 'tel:' + (value || '').replace(/\s/g, '') : '#',
+      initials: e.initials || '', sub: e.sub || '' }; };
+  return {
+    ovMeta: [['Matter','00334'],['Type','Contract of Sale'],['Acting for','Proprietor on Title'],['State','WA'],['Property','Residential'],['Conveyancer','Nishadi WA']].map(([k, v]) => ({ k, v })),
+    moreOpen: !!st.ovMore, moreExp: st.ovMore ? 'true' : 'false', moreToggle: () => c.setState({ ovMore: !st.ovMore }), moreClose: () => c.setState({ ovMore: false }),
+    ovNav: ['Overview','Edit matter','Matter diary','Communications','Documents','Notes','Financials','Trust account','Integrations','Pathway to settlement','History']
+      .map((label, i) => ({ label, icon: NAVI[label], hasAdd: !st.navCol && (label === 'Matter diary' || label === 'Notes'), addLabel: label === 'Notes' ? 'Create note' : 'Add diary item',
+        add: label === 'Notes' ? () => c.setState({ cn: { title: '', detail: '', alert: false, tried: false } }) : () => c.setState({ di: { due: '2026-10-27', asg: 'Nishadi WA', desc: '', notes: [], tried: false } }), aria: st.navCol ? label : null, tip: st.navCol ? label : '', href: NAV_HREF[label] || '#', cur: label === NAV_ACTIVE ? 'page' : 'false', bg: label === NAV_ACTIVE ? '#EEF2F7' : 'transparent', fg: label === NAV_ACTIVE ? '#14335C' : '#3A4657', fw: label === NAV_ACTIVE ? 700 : 500 })),
+    navWide: !st.navCol, navCollapsed: !!st.navCol, navW: st.navCol ? '64px' : '220px', navJustify: st.navCol ? 'center' : 'flex-start', navRot: st.navCol ? 'rotate(180deg)' : 'none',
+    navExp: st.navCol ? 'false' : 'true', navBtnLabel: st.navCol ? 'Expand menu' : 'Collapse menu', navToggle: () => c.setState({ navCol: !st.navCol }),
+    ovCards: [
+      { title: 'Property details', party: false, pill: '', fields: [cardF('Address', '56 Thomas Street West Perth, WA 6005 Australia', 'pin'), cardF('Development', 'Water and Electricity', 'bolt'), cardF('Volume/Folio', '', 'book'), cardF('Lot details', 'Lot 10 on Deposited Plan 12', 'grid')] },
+      { title: 'Settlement details', party: false, pill: 'Settled', pillBg: '#DCFAE6', pillFg: '#067647', fields: [cardF('Contractual due date', '16/10/2026', 'cal'), cardF('Possession', '16/10/2026', 'key'), cardF('Adjustment', '16/10/2026', 'swap'), cardF('Held in trust', '', 'bank')] },
+      { title: 'Proprietor on Title details', party: true, ringColor: '#14335C', dotColor: '#14335C', pill: 'Representing', pillBg: '#E6EEF8', pillFg: '#14335C', fields: [cardF('Name', 'Nishy perth properties', 'user', 'name', { initials: 'NP', sub: 'Capacity: POA' }), cardF('Address', "360 South Street O'Connor, WA 6163 Australia", 'pin'), cardF('Email', 'nishyperthproperties1@yopmail.com', 'mail', 'email'), cardF('Phone', '67575686868', 'phone', 'phone')] },
+      { title: 'Incoming Proprietor details', party: true, ringColor: '#9AA7B8', dotColor: 'transparent', pill: '', fields: [cardF('Name', 'Anne', 'user', 'name', { initials: 'AN' }), cardF('Address', '', 'pin'), cardF('Email', '', 'mail', 'email'), cardF('Phone', '', 'phone', 'phone')] }
+    ],
+    ovTabs: ['Overview', 'Notes', 'Financials'].map(label => ({ label, sel: tab === label ? 'true' : 'false', pick: () => c.setState({ ovTab: label }) })),
+    ovIsOverview: tab === 'Overview', ovOtherTab: tab !== 'Overview', ovTabName: tab,
+    ovSections: sections.map(([key, title, pill, party, items]) => { const open = !!col[key];
+      return { title, open, exp: open ? 'true' : 'false', toggleLabel: (open ? 'Collapse ' : 'Expand ') + title, chev: open ? 'rotate(180 12 12)' : '',
+        headBorder: open ? '#E3E8EF' : 'transparent', party, ringColor: pill ? '#14335C' : '#9AA7B8', dotColor: pill ? '#14335C' : 'transparent',
+        pill: pill ? pill[0] : '', pillBg: pill ? pill[1] : '', pillFg: pill ? pill[2] : '', items, empty: items.length === 0,
+        toggle: () => c.setState({ ovCol: { ...col, [key]: !open } }) }; })
+  };
+}
+function DD(c, id, opts, value, onPick, ph) {
+  const st = c.state || {}, open = st.ddOpen === id, pos = open ? (st.ddPos || {}) : {};
+  if (!c._ddL) { c._ddL = true;
+    window.addEventListener('scroll', (e) => { if (!(c.state || {}).ddOpen) return; if (e.target && e.target.closest && e.target.closest('.thlist2')) return; c.setState({ ddOpen: null }); }, true);
+    window.addEventListener('resize', () => { if ((c.state || {}).ddOpen) c.setState({ ddOpen: null }); }); }
+  const cur = opts.find(o => String(o.v) === String(value));
+  return { label: cur ? cur.l : (ph || 'Select'), lc: cur ? '#172234' : '#5A6577', open, exp: open ? 'true' : 'false', rot: open ? 'rotate(180deg)' : 'none', bd: open ? '#14335C' : '#D5DCE6',
+    lt: pos.top || 'auto', lb: pos.bottom || 'auto', ll: pos.left || '0', lw: pos.width || '200px', lmh: pos.maxH || '320px',
+    toggle: (e) => { if (open) { c.setState({ ddOpen: null }); return; } let p = {};
+      try { const r = e.currentTarget.getBoundingClientRect(), H = Math.min(320, opts.length * 40 + 14), W = Math.max(r.width, 180);
+        const below = window.innerHeight - r.bottom - 12, above = r.top - 12;
+        p = (below >= H || below >= above) ? { top: (r.bottom + 4) + 'px', bottom: 'auto', maxH: Math.max(120, below) + 'px' } : { top: 'auto', bottom: (window.innerHeight - r.top + 4) + 'px', maxH: Math.max(120, above) + 'px' };
+        p.left = Math.max(8, Math.min(r.left, window.innerWidth - W - 8)) + 'px'; p.width = W + 'px'; } catch (x) {}
+      c.setState({ ddOpen: id, ddPos: p }); },
+    close: (e) => { if (e && e.preventDefault) e.preventDefault(); c.setState({ ddOpen: null }); },
+    key: (e) => { if (e.key === 'Escape' && open) { e.stopPropagation(); c.setState({ ddOpen: null }); } },
+    opts: opts.map(o => { const on = String(o.v) === String(value);
+      return { label: o.l, on, sel: on ? 'true' : 'false', bg: on ? '#EEF2F7' : 'transparent', fw: on ? 700 : 500, fg: on ? '#14335C' : '#172234',
+        pick: (e) => { if (e && e.preventDefault) e.preventDefault(); c.setState({ ddOpen: null }); if (onPick) onPick(o.v); } }; }) };
+}
+function DDS(c, id, opts, def) { const st = c.state || {}, vals = st.ddVal || {}; const v = id in vals ? vals[id] : def;
+  return DD(c, id, opts, v, (x) => c.setState({ ddVal: { ...((c.state || {}).ddVal || {}), [id]: x } })); }
+function ddHook(c, v) {
+  const o = {};
+  if (v.diOpen) o.ddDiAsg = DD(c, 'di-asg', [{ v: "Nishadi WA", l: "Nishadi WA" }, { v: "Anna WA-Proaxiom", l: "Anna WA-Proaxiom" }, { v: "Darshana WA", l: "Darshana WA" }, { v: "Deshani WA", l: "Deshani WA" }, { v: "Dimuth WA", l: "Dimuth WA" }, { v: "Harsha WA", l: "Harsha WA" }], v.diAsg, (x) => v.diAsgChange({ target: { value: x } }));
+  return o;
+}
+class Component extends DCLogic {
+  renderVals() { const v = { ...this._rv(), ...rcSearchVals(this), ...rcHeaderVals(this), ...rcOverviewVals(this), ...rcMdVals(this), ...rcTasksVals(this), ...rcPopVals(this), ...rcDiaryVals(this), ...rcCommsVals(this), ...rcDocsVals(this), ...rcTrustVals(this), ...rcIntVals(this), ...rcPtsVals(this) }; return { ...v, ...ddHook(this, v) }; }
+  constructor(p){ super(p); this.state = { sel: null }; }
+  _rv() {
+    const stages = [
+      ['Conditional', 3, '#A3335F', '#F2B8D2', '#FCEAF2'],
+      ['Unconditional', 0, '#1F5FA8', '#A9C8EC', '#EAF2FB'],
+      ['Nearing settlement', 0, '#8A5300', '#F5D29A', '#FDF3E1'],
+      ['Settling today', 0, '#1A6B45', '#A8DCC0', '#E8F6EE']
+    ].map(([label, n, c, pastel, tint]) => ({
+      label, value: n, aria: label + ': ' + n + ' matters',
+      bar: pastel, numColor: c, tint
+    }));
+    const unit = 30;
+
+    const UP = [
+      { g: 'week', day: '23', mon: 'Oct', title: 'Settlement', kind: 'Settlement', ref: '00012', addr: '14 Prospect Road, Prospect SA 5082', parties: ['Grace Tan', 'Liam Walsh'], acting: 'Both', when: 'In 4 days' },
+      { g: 'later', day: '28', mon: 'Oct', title: 'Settlement', kind: 'Settlement', ref: '00015', addr: '7 Hill Street, Glenelg SA 5045', parties: ['Priya Nair'], acting: 'Vendor', when: 'In 9 days' }
+    ];
+    const GDEF = { overdue: ['Overdue', '#B42318', '#FEE4E2'], week: ['This week', '#14335C', '#E6EEF8'], later: ['Later', '#3A4657', '#F1F4F8'] };
+    const upGroups = ['overdue', 'week', 'later'].map(k => {
+      const items = UP.filter(u => u.g === k).map(u => {
+        const od = k === 'overdue', st = u.kind === 'Settlement';
+        return { ...u,
+          parties: u.parties.join(', '),
+          partyShort: u.parties[0] + (u.parties.length > 1 ? ' +' + (u.parties.length - 1) : ''),
+          dateBg: od ? '#FEE4E2' : (st ? '#E6EEF8' : '#F1F4F8'), dateFg: od ? '#B42318' : '#14335C',
+          kindBg: st ? '#E6EEF8' : '#F1F4F8', kindFg: st ? '#14335C' : '#3A4657',
+          whenColor: od ? '#B42318' : '#5A6577' };
+      });
+      return { label: GDEF[k][0], color: GDEF[k][1], chipBg: GDEF[k][2], count: items.length, items };
+    }).filter(g => g.items.length);
+    const fullNames = { 'Oct 26':'October 2026','Nov 26':'November 2026','Dec 26':'December 2026','Jan 27':'January 2027','Feb 27':'February 2027','Mar 27':'March 2027','Apr 27':'April 2027','May 27':'May 2027' };
+    const months = [
+      ['Oct 26',1,1],['Nov 26',0,1],['Dec 26',2,0],['Jan 27',1,3],['Feb 27',2,1],['Mar 27',1,1],['Apr 27',1,1],['May 27',2,0]
+    ].map(([label,both,pot]) => ({ label, both, pot, full: fullNames[label], total: both+pot, tipB: ((both+pot)*unit + 32)+'px', hBoth: (both*unit)+'px', hPot: (pot*unit)+'px',
+      aria: fullNames[label] + ': ' + (both+pot) + ' settlements, ' + both + ' both parties, ' + pot + ' proprietor on title. Show list.',
+      open: () => this.setState({ sel: this.state.sel === label ? null : label }) }));
+    const nM = months.length;
+    months.forEach((m, i) => {
+      m.key = i; m.isSel = this.state.sel === m.label; m.noSel = !m.isSel; m.exp = m.isSel ? 'true' : 'false';
+      m.plural = m.total === 1 ? '' : 's';
+      m.breakdown = [m.both ? m.both + ' both parties' : '', m.pot ? m.pot + ' proprietor on title' : ''].filter(Boolean).join(', ');
+      m.btnBg = m.isSel ? '#EEF2F7' : 'transparent';
+      if (i < 2) { m.left = '0'; m.right = 'auto'; m.tx = 'none'; m.caret = 'calc(50% - 6px)'; m.caret = '40px'; }
+      else if (i > nM - 3) { m.left = 'auto'; m.right = '0'; m.tx = 'none'; m.caret = 'calc(100% - 52px)'; }
+      else { m.left = '50%'; m.right = 'auto'; m.tx = 'translateX(-50%)'; m.caret = 'calc(50% - 6px)'; }
+    });
+    const selM = months.find(m => m.label === this.state.sel);
+    let sel = false;
+    if (selM) {
+      const B = 'both', P = 'pot';
+      const sample = {
+        'Oct 26': [[B,'00012','14 Prospect Road, Prospect','Fri 23 Oct'],[P,'00015','7 Hill Street, Glenelg','Wed 28 Oct']],
+        'Nov 26': [[P,'00018','22 Henley Beach Road, Mile End','Thu 12 Nov']],
+        'Dec 26': [[B,'00021','5 Kensington Road, Norwood','Fri 4 Dec'],[B,'00023','31 Main North Road, Enfield','Fri 18 Dec']],
+        'Jan 27': [[B,'00026','9 Unley Road, Unley','Fri 8 Jan'],[P,'00027','48 Goodwood Road, Wayville','Thu 14 Jan'],[P,'00029','3 Marion Road, Plympton','Thu 21 Jan'],[P,'00030','16 Port Road, Hindmarsh','Thu 28 Jan']],
+        'Feb 27': [[B,'00032','11 The Parade, Norwood','Fri 5 Feb'],[B,'00034','27 Magill Road, Stepney','Fri 19 Feb'],[P,'00035','60 Grange Road, Welland','Wed 24 Feb']],
+        'Mar 27': [[B,'00037','8 Fullarton Road, Parkside','Thu 11 Mar'],[P,'00038','19 Brighton Road, Glenelg South','Thu 25 Mar']],
+        'Apr 27': [[B,'00041','2 Payneham Road, St Peters','Fri 9 Apr'],[P,'00043','33 Anzac Highway, Everard Park','Thu 22 Apr']],
+        'May 27': [[B,'00045','12 North East Road, Walkerville','Fri 7 May'],[B,'00047','41 Tapleys Hill Road, Fulham','Thu 20 May']]
+      };
+      const items = (sample[selM.label] || []).map(([t, ref, addr, date]) => t === B
+        ? { ref, addr, date, type: 'Both parties', color: '#14335C' }
+        : { ref, addr, date, type: 'Proprietor on title', color: '#F2A7C8' });
+      const parts = [];
+      if (selM.both) parts.push(selM.both + ' both parties');
+      if (selM.pot) parts.push(selM.pot + ' proprietor on title');
+      sel = { full: selM.full, items, summary: selM.total + (selM.total === 1 ? ' matter' : ' matters') + ' · ' + parts.join(', ') };
+    }
+    const settlements = {
+      23: [{ color: '#14335C', type: 'Both parties', m: '00012 · 14 Prospect Road, Prospect' }],
+      28: [{ color: '#E27AAA', type: 'Proprietor on title', m: '00015 · 7 Hill Street, Glenelg' }]
+    };
+    const days = [];
+    for (let i = 0; i < 3; i++) days.push({ n: '', bg: 'transparent', fg: '#172234', fw: 400, dots: [], tip: false, tab: '-1', aria: '' });
+    for (let d = 1; d <= 31; d++) {
+      const today = d === 19;
+      const s = settlements[d] || [];
+      const tip = s.length ? s.map(x => 'Settlement · ' + x.type + '\n' + x.m).join('\n\n') : false;
+      days.push({
+        n: d, dots: s.map(x => x.color), tip,
+        tab: s.length ? '0' : '-1',
+        aria: d + ' October' + (today ? ', today' : '') + (s.length ? ', ' + s.length + ' settlement: ' + s.map(x => x.type).join(', ') : ''),
+        bg: today ? '#14335C' : (s.length ? '#EEF2F7' : 'transparent'),
+        fg: today ? '#fff' : (d < 19 ? '#5A6577' : '#172234'),
+        fw: today || s.length ? 700 : 400
+      });
+    }
+    return {
+      stages, months, days, sel, upGroups, upEmpty: upGroups.length === 0,
+      closeSel: () => this.setState({ sel: null }),
+      selKey: (e) => { if (e.key === 'Escape') this.setState({ sel: null }); },
+      dow: ['Mo','Tu','We','Th','Fr','Sa','Su']
+    };
+  }
+}
+</script>
+</body>
+</html>
